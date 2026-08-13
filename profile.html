@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage your VHotel profile, active suite reservations, and luxury concierge preferences.">
+  <title>VHotels | Member Profile</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar sticky" id="nav-header">
+    <div class="container">
+      <a href="index.html" class="logo" id="nav-logo">VHOTELS</a>
+      
+      <ul class="nav-links" id="menu-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#featured-hotels">Hotels</a></li>
+        <li><a href="index.html#dining-experience">Dining</a></li>
+        <li><a href="profile.html" class="active">Profile</a></li>
+        <li class="nav-btn"><button id="btn-logout" class="btn-gold" style="padding: 8px 20px; font-size: 0.75rem;">Logout</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Profile Container -->
+  <main class="container section-padding" style="margin-top: 60px;">
+    <div class="profile-card" id="profile-container">
+      <header class="profile-header">
+        <div class="profile-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="profile-title-group">
+          <span class="badge-gold"><i class="fas fa-crown"></i> Royal Elite Member</span>
+          <h1 id="profile-full-name">Guest Member</h1>
+          <p id="profile-email">member@vhotels.com</p>
+        </div>
+      </header>
+
+      <div class="profile-single-column">
+        <!-- Personal Details Box -->
+        <div class="profile-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h3 style="margin-bottom: 0;"><i class="fas fa-id-card"></i> Personal Details</h3>
+            <button id="btn-open-edit-modal" class="btn-gold" style="padding: 8px 18px; font-size: 0.85rem; cursor: pointer;">
+              <i class="fas fa-edit"></i> Edit Profile
+            </button>
+          </div>
+
+          <div class="profile-info-list">
+            <div class="profile-info-item">
+              <span class="label">Salutation / Title:</span>
+              <span class="value" id="disp-title">-</span>
+            </div>
+            <div class="profile-info-item">
+              <span class="label">First Name:</span>
+              <span class="value" id="disp-first-name">-</span>
+            </div>
+            <div class="profile-info-item">
+              <span class="label">Last Name:</span>
+              <span class="value" id="disp-last-name">-</span>
+            </div>
+            <div class="profile-info-item">
+              <span class="label">Date of Birth:</span>
+              <span class="value" id="disp-dob">-</span>
+            </div>
+            <div class="profile-info-item">
+              <span class="label">Email Address:</span>
+              <span class="value" id="disp-email">-</span>
+            </div>
+            <div class="profile-info-item">
+              <span class="label">Mobile Number:</span>
+              <span class="value" id="disp-mobile">-</span>
+            </div>
+            <div class="profile-info-item">
+              <span class="label">Preferred Resort:</span>
+              <span class="value" id="disp-resort">-</span>
+            </div>
+            <div class="profile-info-item">
+              <span class="label">Residential Address:</span>
+              <span class="value" id="disp-address">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal-overlay" id="edit-profile-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><i class="fas fa-user-edit" style="color: var(--color-gold);"></i> Edit Member Profile</h2>
+        <button class="modal-close" id="btn-close-edit-modal">&times;</button>
+      </div>
+      <form id="edit-profile-form" novalidate>
+        <div class="form-row">
+          <div class="form-group" style="flex: 0.4;">
+            <div class="input-wrapper">
+              <select id="edit-title" required>
+                <option value="Mr.">Mr.</option>
+                <option value="Ms.">Ms.</option>
+                <option value="Mrs.">Mrs.</option>
+                <option value="Dr.">Dr.</option>
+                <option value="Lord">Lord</option>
+                <option value="Lady">Lady</option>
+              </select>
+            </div>
+            <span class="error-msg" id="edit-title-error"></span>
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <div class="input-wrapper">
+              <input type="text" id="edit-first-name" placeholder=" " required>
+              <label for="edit-first-name">First Name (min 6 letters)</label>
+            </div>
+            <span class="error-msg" id="edit-first-name-error"></span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="input-wrapper">
+              <input type="text" id="edit-last-name" placeholder=" " required>
+              <label for="edit-last-name">Last Name</label>
+            </div>
+            <span class="error-msg" id="edit-last-name-error"></span>
+          </div>
+
+          <div class="form-group">
+            <div class="input-wrapper">
+              <input type="date" id="edit-dob" required>
+              <label for="edit-dob" style="top: -10px; font-size: 0.75rem; color: var(--color-gold);">Date of Birth</label>
+            </div>
+            <span class="error-msg" id="edit-dob-error"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input type="email" id="edit-email" placeholder=" " required>
+            <label for="edit-email">Email Address</label>
+          </div>
+          <span class="error-msg" id="edit-email-error"></span>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input type="tel" id="edit-mobile" placeholder=" " required>
+            <label for="edit-mobile">Mobile Number (10 digits)</label>
+          </div>
+          <span class="error-msg" id="edit-mobile-error"></span>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <select id="edit-resort" required>
+              <option value="VHotels Palace (Rajasthan)">VHotels Palace (Rajasthan, India)</option>
+              <option value="VHotels Riviera (Maldives)">VHotels Riviera (Maldives)</option>
+              <option value="VHotels Alpine Lodge (St. Moritz)">VHotels Alpine Lodge (St. Moritz)</option>
+            </select>
+          </div>
+          <span class="error-msg" id="edit-resort-error"></span>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper input-wrapper-textarea">
+            <textarea id="edit-address" placeholder=" " required rows="2"></textarea>
+            <label for="edit-address">Residential Address</label>
+          </div>
+          <span class="error-msg" id="edit-address-error"></span>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-outline" id="btn-cancel-edit" style="padding: 10px 20px;">Cancel</button>
+          <button type="submit" class="btn-gold" id="btn-save-edit" style="padding: 10px 25px;">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>

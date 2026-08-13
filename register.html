@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create your VHotel membership account. Unlock exclusive benefits, private resort access, and bespoke concierge services.">
+  <title>VHotels | Member Registration</title>
+  
+  <!-- Font Awesome for premium icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Core Design System CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+  <!-- Back to Home Navigation Link -->
+  <a href="index.html" class="back-to-home" id="btn-back">
+    <i class="fas fa-chevron-left"></i> Back to Home
+  </a>
+
+  <!-- Centered Glassmorphism Registration Card -->
+  <main class="login-card reg-card" id="register-container">
+    <header class="login-header">
+      <div class="login-logo">VHotels</div>
+      <p>Luxury Elite Membership</p>
+      <h2>Create Your Account</h2>
+    </header>
+
+    <form class="login-form" id="member-register-form" novalidate>
+      
+      <!-- Salutation Title & First Name (2 Columns) -->
+      <div class="form-row">
+        <div class="form-group" style="flex: 0.4;">
+          <div class="input-wrapper">
+            <select id="title" required>
+              <option value="" disabled selected>Title</option>
+              <option value="Mr.">Mr.</option>
+              <option value="Ms.">Ms.</option>
+              <option value="Mrs.">Mrs.</option>
+              <option value="Dr.">Dr.</option>
+              <option value="Lord">Lord</option>
+              <option value="Lady">Lady</option>
+            </select>
+          </div>
+          <span class="error-msg" id="title-error"></span>
+        </div>
+
+        <div class="form-group" style="flex: 1;">
+          <div class="input-wrapper">
+            <input type="text" id="first-name" placeholder=" " required autocomplete="given-name">
+            <label for="first-name">First Name (min 6 letters)</label>
+          </div>
+          <span class="error-msg" id="first-name-error"></span>
+        </div>
+      </div>
+
+      <!-- Last Name & Date of Birth -->
+      <div class="form-row">
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input type="text" id="last-name" placeholder=" " required autocomplete="family-name">
+            <label for="last-name">Last Name</label>
+          </div>
+          <span class="error-msg" id="last-name-error"></span>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input type="date" id="dob" required>
+            <label for="dob" style="top: -10px; font-size: 0.75rem; color: var(--color-gold);">Date of Birth</label>
+          </div>
+          <span class="error-msg" id="dob-error"></span>
+        </div>
+      </div>
+
+      <!-- Email ID Field -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input type="email" id="reg-email" placeholder=" " required autocomplete="email">
+          <label for="reg-email">Email Address (name@domain.com)</label>
+        </div>
+        <span class="error-msg" id="reg-email-error"></span>
+      </div>
+
+      <!-- Password & Mobile Number (2 Columns) -->
+      <div class="form-row">
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input type="password" id="reg-password" placeholder=" " required autocomplete="new-password">
+            <label for="reg-password">Password (min 6 chars)</label>
+            <span class="toggle-password" id="reg-eye-toggle"><i class="fas fa-eye"></i></span>
+          </div>
+          <span class="error-msg" id="reg-password-error"></span>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input type="tel" id="mobile" placeholder=" " required autocomplete="tel">
+            <label for="mobile">Mobile Number (10 digits)</label>
+          </div>
+          <span class="error-msg" id="mobile-error"></span>
+        </div>
+      </div>
+
+      <!-- Preferred Estate Selection -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <select id="preferred-resort" required>
+            <option value="" disabled selected>Select Preferred Resort Estate...</option>
+            <option value="VHotels Palace (Rajasthan)">VHotels Palace (Rajasthan, India)</option>
+            <option value="VHotels Riviera (Maldives)">VHotels Riviera (Maldives)</option>
+            <option value="VHotels Alpine Lodge (St. Moritz)">VHotels Alpine Lodge (St. Moritz)</option>
+          </select>
+        </div>
+        <span class="error-msg" id="resort-error"></span>
+      </div>
+
+      <!-- Address Field -->
+      <div class="form-group">
+        <div class="input-wrapper input-wrapper-textarea">
+          <textarea id="address" placeholder=" " required rows="2" autocomplete="street-address"></textarea>
+          <label for="address">Full Residential Address</label>
+        </div>
+        <span class="error-msg" id="address-error"></span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="login-actions" style="margin-top: 15px;">
+        <button type="submit" class="btn-gold" id="btn-reg-submit">Register Elite Membership</button>
+      </div>
+    </form>
+
+    <!-- Card Footer Links -->
+    <footer class="login-footer">
+      Already a member? <a href="login.html">Sign In</a>
+    </footer>
+
+    <!-- Copyright -->
+    <div class="login-copyright">
+      &copy; 2026 VHotels Resorts. All Rights Reserved.
+    </div>
+  </main>
+
+  <!-- Frontend Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
