@@ -2019,3 +2019,15 @@ select.is-valid {
   gap: 15px;
   margin-top: 25px;
 }
+
+@keyframes slideInToast {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

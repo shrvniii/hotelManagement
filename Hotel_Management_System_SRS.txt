@@ -1,0 +1,578 @@
+
+Software Requirements Specification
+Hotel Management System
+Prepared in accordance with IEEE 830 / IEEE 29148 Standards
+Version 1.0
+Department of Computer Engineering
+Software Engineering Course Project
+Academic Year 2025 – 2026
+Table of Contents
+
+
+1.  Introduction
+1.1 Purpose
+This Software Requirements Specification (SRS) document describes the functional and non-functional requirements for the Hotel Management System (HMS), a web-based application developed as part of a semester-long Software Engineering course project. The purpose of this document is to provide a complete and unambiguous description of the system's intended capabilities, constraints, and behaviour so that it can serve as a common reference point for the project team, course instructors, and evaluators throughout the design, implementation, and testing phases of the project.
+This document follows the structure and conventions recommended by the IEEE 830-1998 and IEEE/ISO/IEC 29148 standards for software requirements specifications, adapted where necessary to suit the scope of an academic project. It is intended to be read before any design or coding activity begins, and it will be revisited and updated as the project evolves through successive development iterations.
+1.2 Scope
+The Hotel Management System is a web-based platform that enables customers to search for hotels, view detailed information about hotels and rooms, make and manage bookings, and complete secure online payments. The system also provides hotel staff and administrators with tools to manage hotel inventory, rooms, bookings, customer records, staff accounts, promotional offers, and to generate operational reports. The platform draws general inspiration from the features and workflow commonly found on commercial hotel booking websites, including the publicly accessible Taj Hotels website, but it is an entirely independent academic implementation with its own design, data model, source code, and branding. No content, text, imagery, or code has been copied from any external website; the reference is used solely to understand typical customer-facing hotel booking workflows.
+The system is being developed as a single, cohesive web application accessible through modern web browsers on desktop and mobile devices. It is not intended for production commercial deployment; rather, it functions as a demonstration of software engineering principles including requirements analysis, system design, database design, secure coding practice, and software testing.
+1.3 Intended Audience
+This document is intended for the following groups of readers:
+Project team members (developers, designers, and testers) who will use this document as the basis for system design and implementation.
+Course instructors and evaluators who will assess the completeness, feasibility, and quality of the requirements.
+Quality assurance personnel responsible for deriving test cases from the documented requirements.
+Future maintainers of the system who may extend or modify it beyond the scope of the current academic submission.
+1.4 Definitions, Acronyms, and Abbreviations
+Term
+Definition
+SRS
+Software Requirements Specification
+HMS
+Hotel Management System (the system described in this document)
+UI
+User Interface
+UX
+User Experience
+DBMS
+Database Management System
+API
+Application Programming Interface
+HTTPS
+Hypertext Transfer Protocol Secure
+RBAC
+Role-Based Access Control
+OTP
+One-Time Password
+CRUD
+Create, Read, Update, Delete
+Guest
+A visitor to the website who has not created or logged into an account
+Registered Customer
+A user who has created an account and can make bookings
+Admin
+System Administrator with the highest level of system access
+SLA
+Service Level Agreement
+ERD
+Entity Relationship Diagram
+1.5 References
+IEEE Std 830-1998, IEEE Recommended Practice for Software Requirements Specifications.
+ISO/IEC/IEEE 29148:2018, Systems and software engineering — Life cycle processes — Requirements engineering.
+Taj Hotels website, https://www.tajhotels.com/en-in — referenced only as general inspiration for customer-facing hotel booking features; no content was reproduced from this source.
+Course handbook and project guidelines issued for the Software Engineering course.
+1.6 Document Overview
+The remainder of this document is organised as follows. Section 2 describes the overall scope of the project, including its boundaries, objectives, assumptions, and constraints. Section 3 defines the user roles that interact with the system. Section 4 presents the functional requirements organised by module. Section 5 elaborates on the core modules in greater depth. Section 6 describes the overall system workflow from the perspective of a guest progressing through to feedback submission. Section 7 lists individual system features. Section 8 specifies non-functional requirements. Section 9 provides a summary table of use cases. Section 10 and Section 11 describe system constraints and assumptions respectively. Section 12 outlines possible future enhancements, and Section 13 summarises the overall project scope and expected outcomes.
+2.  Overall Project Scope
+2.1 Project Boundaries
+The Hotel Management System covers the complete customer journey from hotel discovery to post-stay feedback, as well as the administrative workflows required to support that journey. The system boundary includes the customer-facing web application, the staff and administrative back-office application, the underlying database, and the payment processing integration. External systems such as third-party payment gateways and email delivery services are treated as external actors that the system communicates with through defined interfaces; their internal implementation is outside the scope of this project.
+2.2 Features Included
+Guest and registered customer hotel search, browsing, and comparison.
+Detailed hotel and room information pages including images, amenities, pricing, and reviews.
+Online room booking, booking confirmation, modification, and cancellation.
+Secure simulated online payment processing and invoice generation.
+Customer review and rating submission and moderation.
+Staff tools for check-in, check-out, and room status management.
+Administrative tools for managing hotels, rooms, staff, offers, bookings, and users.
+Reporting and analytics dashboard for management-level decision support.
+Role-based authentication and authorization across all user types.
+2.3 Features Excluded
+The following features are explicitly outside the scope of this academic project:
+Integration with real, live third-party payment gateways; payments will be simulated in a sandbox/mock environment.
+Native mobile applications for iOS or Android (the system is web-based and responsive only).
+Multi-property loyalty point redemption with external partners.
+Integration with third-party global distribution systems (GDS) or channel managers used by real hotel chains.
+Multi-language and multi-currency support (identified as a future enhancement).
+AI-based dynamic pricing and recommendation engines (identified as a future enhancement).
+2.4 Business Objectives
+Provide customers with a simple, transparent, and reliable way to search for and book hotel rooms.
+Reduce the administrative burden on hotel staff through digitised booking and inventory management.
+Improve decision-making for hotel management through consolidated reporting and analytics.
+Demonstrate sound software engineering practice, including modular design, secure authentication, and thorough testing, suitable for academic evaluation.
+2.5 Assumptions
+Users have access to a stable internet connection and a modern web browser.
+Hotel and room data is entered and maintained accurately by authorised staff and administrators.
+Payment simulation is acceptable in place of a live payment gateway for demonstration purposes.
+The system will be evaluated in a controlled academic environment rather than a live production environment with real customer traffic.
+2.6 Constraints
+The project must be completed within a single academic semester by a small student team.
+The system must be built using technologies covered in the course curriculum or readily available open-source frameworks.
+The project has a limited testing budget and cannot undergo a full commercial security audit.
+Hosting and infrastructure resources are limited to those available through the institution or free-tier cloud services.
+2.7 Benefits to Customers and Hotel Administrators
+For customers, the system offers a convenient, self-service alternative to phone- or walk-in-based reservations. Customers can compare hotels and room types, view transparent pricing and availability in real time, manage their own bookings, and provide feedback that helps future guests make informed decisions.
+For hotel administrators and staff, the system centralises previously manual or fragmented processes — such as tracking room availability, recording walk-in and online bookings, and compiling occupancy statistics — into a single digital platform. This reduces double-booking errors, speeds up check-in and check-out, and gives managers timely visibility into occupancy, revenue, and customer satisfaction trends through the reporting dashboard.
+3.  User Roles
+The Hotel Management System supports five distinct user roles, each with a clearly defined set of responsibilities, permissions, and limitations. Role-based access control (RBAC) is used throughout the system to ensure that each user can only perform actions appropriate to their role.
+3.1 Guest (Non-Logged-In User)
+Responsibilities:
+Browse the public-facing website without creating an account.
+Explore hotel listings and general information to evaluate the platform before registering.
+Permissions:
+View hotel search results, hotel detail pages, room categories, and published reviews.
+Use search, filter, and sort features on the hotel listing pages.
+Major Tasks:
+Search for hotels by city, date range, and number of guests.
+View hotel amenities, room categories, pricing, and existing customer reviews.
+Initiate the registration process when ready to book.
+Limitations:
+Cannot make a booking, save preferences, or submit a review without registering.
+Cannot access any personalised or account-specific data.
+3.2 Registered Customer
+Responsibilities:
+Maintain accurate personal and contact information.
+Make responsible use of the booking and payment features.
+Permissions:
+Full access to search, view, book, modify, and cancel their own reservations.
+Access to their own booking history, invoices, and profile settings.
+Ability to submit reviews and ratings for hotels they have stayed at.
+Major Tasks:
+Register an account and manage login credentials, including password recovery.
+Search, compare, and book hotel rooms.
+Make online payments and download invoices.
+Cancel or modify existing bookings within policy limits.
+Submit reviews and ratings after a completed stay.
+Limitations:
+Cannot access other customers' bookings, personal data, or payment information.
+Cannot access staff or administrative functions.
+Cancellation and modification are subject to the hotel's stated policies and time limits.
+3.3 Receptionist / Hotel Staff
+Responsibilities:
+Manage the front-desk operations for the hotel(s) they are assigned to.
+Ensure booking and room status information is kept up to date in real time.
+Permissions:
+View and manage bookings for their assigned hotel property.
+Update room status (e.g., occupied, vacant, under maintenance).
+Process guest check-in and check-out.
+Major Tasks:
+Verify guest identity and booking details at check-in.
+Record check-out and update room availability.
+Handle walk-in bookings where permitted.
+Escalate booking disputes or payment issues to the hotel manager.
+Limitations:
+Cannot create, edit, or delete hotel records, staff accounts, or system-wide settings.
+Cannot access reports or analytics beyond their assigned property.
+3.4 Hotel Manager
+Responsibilities:
+Oversee the operational and commercial performance of one or more assigned hotel properties.
+Ensure room inventory, pricing, and offers are accurate and up to date.
+Permissions:
+Full CRUD access to rooms, pricing, and offers for their assigned hotel(s).
+Access to booking records and performance reports for their hotel(s).
+Ability to manage receptionist and staff accounts for their hotel(s).
+Major Tasks:
+Add, edit, and remove room categories and adjust pricing and availability.
+Create and manage promotional offers and discounts.
+Review occupancy, revenue, and customer satisfaction reports for their hotel(s).
+Moderate customer reviews flagged as inappropriate.
+Limitations:
+Cannot manage hotels or staff outside their assigned property.
+Cannot access system-wide administrative configuration or user management for other roles.
+3.5 System Administrator
+Responsibilities:
+Maintain the overall health, security, and configuration of the platform.
+Manage the master list of hotels, users, and system-wide settings.
+Permissions:
+Full access to all modules, including user management, hotel management, and system reports.
+Ability to create, suspend, or delete any user account, including managers and staff.
+Access to system-wide analytics and audit logs.
+Major Tasks:
+Onboard new hotel properties onto the platform.
+Create and manage manager and staff accounts across all hotels.
+Monitor system-wide bookings, revenue, and usage reports.
+Configure global settings such as supported payment methods and cancellation policies.
+Limitations:
+Bound by data protection and privacy obligations when accessing customer data.
+Administrative actions affecting other users should be logged for accountability.
+4.  Functional Requirements
+This section presents the functional requirements of the system, grouped into modules. Each requirement is uniquely identified with a code of the form FR-<Module>-<Number> for traceability into design and test documentation.
+4.1 User Management
+FR-UM-01: The system shall allow a guest to register a new account using name, email address, phone number, and password.
+FR-UM-02: The system shall validate that the email address is unique and correctly formatted before creating an account.
+FR-UM-03: The system shall allow a registered customer to log in using a valid email/username and password.
+FR-UM-04: The system shall lock an account temporarily after five consecutive failed login attempts.
+FR-UM-05: The system shall provide a 'Forgot Password' feature that sends a secure, time-limited reset link or OTP to the user's registered email.
+FR-UM-06: The system shall allow a registered customer to view and update their profile information, including contact details and password.
+FR-UM-07: The system shall allow a customer to permanently deactivate their account, subject to no pending bookings.
+4.2 Hotel Search
+FR-HS-01: The system shall allow any user to search for hotels by city or destination name.
+FR-HS-02: The system shall allow the user to specify check-in and check-out dates as part of the search.
+FR-HS-03: The system shall allow the user to specify the number of guests and rooms required.
+FR-HS-04: The system shall allow the user to filter search results by price range, star rating, amenities, and property type.
+FR-HS-05: The system shall allow the user to sort search results by price, rating, and popularity.
+FR-HS-06: The system shall display only hotels and room categories that have availability for the selected date range.
+4.3 Hotel Details
+FR-HD-01: The system shall display a dedicated hotel detail page containing images, description, address, and star rating.
+FR-HD-02: The system shall display the amenities offered by the hotel (e.g., swimming pool, spa, parking, Wi-Fi).
+FR-HD-03: The system shall list all room categories available at the hotel along with representative images, capacity, and pricing.
+FR-HD-04: The system shall display customer reviews and an aggregate rating for the hotel.
+FR-HD-05: The system shall indicate real-time room availability for the dates selected by the user.
+4.4 Room Management
+FR-RM-01: The system shall allow a hotel manager to add a new room category with attributes including name, capacity, amenities, images, and base price.
+FR-RM-02: The system shall allow a hotel manager to edit the details of an existing room category.
+FR-RM-03: The system shall allow a hotel manager to remove a room category that has no active future bookings.
+FR-RM-04: The system shall allow a hotel manager to set and update room availability calendars.
+FR-RM-05: The system shall allow a hotel manager to configure seasonal or date-specific pricing for a room category.
+4.5 Booking Management
+FR-BM-01: The system shall allow a registered customer to book one or more available rooms for specified dates.
+FR-BM-02: The system shall generate a unique booking reference and display a confirmation summary upon successful booking.
+FR-BM-03: The system shall send a booking confirmation email to the customer upon successful payment.
+FR-BM-04: The system shall allow a customer to cancel a booking, subject to the hotel's cancellation policy.
+FR-BM-05: The system shall allow a customer to modify the dates or room type of an existing booking, subject to availability and policy.
+FR-BM-06: The system shall maintain a booking history accessible to the customer, showing past and upcoming stays.
+FR-BM-07: The system shall prevent double-booking of the same room for overlapping date ranges.
+4.6 Payment Module
+FR-PM-01: The system shall allow a customer to pay for a booking using a simulated online payment method (card or wallet).
+FR-PM-02: The system shall generate and make available a downloadable invoice/receipt after successful payment.
+FR-PM-03: The system shall process refunds automatically according to the applicable cancellation policy when a booking is cancelled.
+FR-PM-04: The system shall record the payment status (pending, completed, failed, refunded) for every booking.
+4.7 Review and Rating
+FR-RR-01: The system shall allow a customer to submit a review and star rating only after completing a stay.
+FR-RR-02: The system shall display the average rating and individual reviews on the corresponding hotel detail page.
+FR-RR-03: The system shall allow a hotel manager to flag or moderate reviews that violate content guidelines.
+4.8 Staff Module
+FR-SM-01: The system shall allow receptionist staff to search for a booking by reference number or guest name to perform check-in.
+FR-SM-02: The system shall allow receptionist staff to record guest check-out and update room status to vacant.
+FR-SM-03: The system shall allow receptionist staff to update room status (e.g., under housekeeping, under maintenance).
+4.9 Admin Module
+FR-AM-01: The system shall allow a system administrator to create, edit, suspend, or delete user accounts of any role.
+FR-AM-02: The system shall allow a system administrator to onboard a new hotel property with its basic details.
+FR-AM-03: The system shall allow a system administrator or hotel manager to manage promotional offers and discount codes.
+FR-AM-04: The system shall allow a system administrator to view and manage bookings across all hotel properties.
+FR-AM-05: The system shall provide a dashboard summarising key metrics such as total bookings, revenue, and occupancy rate.
+FR-AM-06: The system shall allow authorised roles to generate and export operational reports (e.g., occupancy, revenue) for a selected date range.
+5.  Core Modules
+This section elaborates on the major modules of the system, describing the purpose, inputs, outputs, major functions, and dependencies of each.
+5.1 User Management Module
+Purpose: manages account creation, authentication, authorisation, and profile maintenance for all user roles.
+Inputs:
+Registration form data
+Login credentials
+Password reset requests
+Profile update requests
+Outputs:
+Authenticated session/token
+Confirmation and notification emails
+Updated user profile records
+Major Functions:
+Account registration and email verification
+Secure login with session/token management
+Password reset via email/OTP
+Role assignment and access control enforcement
+Dependencies:
+Database (user records)
+Email/notification service
+Security/encryption libraries for password hashing
+5.2 Hotel Search Module
+Purpose: enables users to discover hotels that match their travel requirements.
+Inputs:
+Destination/city
+Check-in and check-out dates
+Number of guests and rooms
+Filter and sort preferences
+Outputs:
+Ranked list of matching hotels with summary information
+Applied filter/sort state
+Major Functions:
+Keyword and location-based search
+Availability filtering against the booking calendar
+Multi-criteria filtering and sorting
+Dependencies:
+Hotel and Room Management modules (for availability and pricing data)
+Database (hotel and room records)
+5.3 Hotel and Room Details Module
+Purpose: presents comprehensive information about a specific hotel and its room categories to help users make booking decisions.
+Inputs:
+Hotel identifier selected by the user
+Selected date range
+Outputs:
+Hotel profile (images, description, amenities)
+List of room categories with pricing and availability
+Aggregated reviews and ratings
+Major Functions:
+Rendering of hotel media and descriptive content
+Real-time availability lookup for selected dates
+Aggregation and display of customer reviews
+Dependencies:
+Room Management Module
+Review and Rating Module
+Database (hotel, room, and review records)
+5.4 Room Management Module
+Purpose: allows hotel managers to maintain the inventory, pricing, and availability of room categories.
+Inputs:
+Room category details (name, capacity, amenities, images)
+Pricing and seasonal pricing rules
+Availability calendar updates
+Outputs:
+Updated room inventory records
+Updated pricing and availability data visible to the search and booking modules
+Major Functions:
+Add, edit, and remove room categories
+Configure base and seasonal pricing
+Maintain availability calendars
+Dependencies:
+Database (room records)
+Booking Management Module (to prevent conflicting edits on booked rooms)
+5.5 Booking Management Module
+Purpose: handles the end-to-end lifecycle of a reservation, from creation through modification, cancellation, and history tracking.
+Inputs:
+Selected room(s) and dates
+Guest details
+Modification/cancellation requests
+Outputs:
+Booking confirmation with reference number
+Updated booking status
+Booking history records
+Major Functions:
+Availability validation and reservation locking
+Booking creation, modification, and cancellation
+Application of cancellation and refund policies
+Dependencies:
+Room Management Module
+Payment Module
+Notification service
+5.6 Payment Module
+Purpose: processes payments for bookings and manages invoices and refunds.
+Inputs:
+Payment method details
+Booking amount and applicable taxes/discounts
+Outputs:
+Payment confirmation
+Invoice/receipt (PDF or on-screen)
+Refund confirmation, where applicable
+Major Functions:
+Simulated payment authorisation
+Invoice generation
+Refund calculation and processing based on cancellation policy
+Dependencies:
+Booking Management Module
+Simulated/mock payment gateway
+Notification service
+5.7 Review and Rating Module
+Purpose: collects and displays customer feedback to help future guests and hotel management.
+Inputs:
+Star rating and written review text
+Associated completed booking reference
+Outputs:
+Published review visible on the hotel detail page
+Updated aggregate rating
+Major Functions:
+Eligibility check (only after a completed stay)
+Review submission and storage
+Moderation queue for flagged content
+Dependencies:
+Booking Management Module
+Database (review records)
+5.8 Staff and Front-Desk Module
+Purpose: supports receptionist staff in managing daily guest arrivals and departures.
+Inputs:
+Booking reference or guest name
+Room status updates
+Outputs:
+Updated booking status (checked-in/checked-out)
+Updated room status
+Major Functions:
+Guest search and verification
+Check-in and check-out processing
+Room status updates (vacant, occupied, maintenance)
+Dependencies:
+Booking Management Module
+Room Management Module
+5.9 Admin and Reporting Module
+Purpose: provides system-wide administrative control and management-level reporting.
+Inputs:
+User, hotel, and offer management commands
+Report parameters (date range, hotel, metric)
+Outputs:
+Updated user/hotel/offer records
+Dashboard visualisations
+Exportable reports (e.g., CSV/PDF)
+Major Functions:
+User and hotel account administration
+Offer and discount configuration
+Dashboard analytics and report generation
+Dependencies:
+All other modules (as the source of data for reporting)
+Database (aggregated records)
+6.  Overall Functionality
+This section describes the complete end-to-end workflow of the system from the perspective of a guest progressing through discovery, booking, stay, and feedback. The workflow proceeds through the following stages: Guest → Search → View Hotel → Select Room → Book → Payment → Confirmation → Check-in → Check-out → Feedback.
+6.1 Guest Arrival
+A first-time visitor lands on the homepage without an account. The homepage presents a search bar, featured hotels, and promotional offers, encouraging the visitor to begin exploring available properties.
+6.2 Search
+The visitor enters a destination, travel dates, and number of guests. The Hotel Search Module queries the database for hotels with matching availability and returns a ranked list of results, which the visitor can further refine using filters (price, star rating, amenities) and sorting options.
+6.3 View Hotel
+Selecting a hotel from the results opens the Hotel Details page, which presents images, a description, amenities, location information, room categories, pricing, and existing guest reviews for the selected date range.
+6.4 Select Room
+The visitor chooses a specific room category based on capacity, amenities, and price. If the visitor is not yet registered, the system prompts registration or login before proceeding to booking.
+6.5 Book
+The now-registered customer confirms guest details, reviews the booking summary (dates, room type, total price including taxes and any applicable offers), and proceeds to payment.
+6.6 Payment
+The customer selects a payment method and completes payment through the simulated payment gateway. The Payment Module validates the transaction and updates the booking's payment status.
+6.7 Confirmation
+Upon successful payment, the system generates a unique booking reference, displays a confirmation screen, generates an invoice, and sends a confirmation email to the customer.
+6.8 Check-in
+On the day of arrival, receptionist staff locate the booking using the reference number or guest name, verify guest identity, and mark the booking as checked-in, which updates the corresponding room's status to occupied.
+6.9 Check-out
+At the end of the stay, receptionist staff process check-out, updating the booking status to completed and the room status back to vacant (pending housekeeping), making the room available for future bookings.
+6.10 Feedback
+Following a completed stay, the customer is invited to submit a star rating and written review, which becomes visible on the hotel's detail page and contributes to its aggregate rating, closing the customer journey loop.
+7.  System Features
+This section lists the individual features of the system along with a brief description of each.
+Feature
+Description
+Authentication
+Secure registration, login, and password recovery with hashed password storage and session/token-based access control.
+Hotel Browsing
+Search, filter, and sort hotels by location, dates, price, rating, and amenities.
+Dynamic Room Pricing
+Base and seasonal pricing rules applied per room category and date range.
+Booking Management
+Creation, modification, cancellation, and history tracking of reservations.
+Booking History
+Chronological record of a customer's past and upcoming stays, accessible from their profile.
+Notifications
+Automated email notifications for registration, booking confirmation, and cancellation.
+Email Confirmation
+Booking confirmation and invoice delivered to the customer's registered email address.
+Payment Gateway (Simulated)
+Secure simulated processing of online payments with recorded transaction status.
+Invoice Generation
+Automatically generated, downloadable invoice for each completed booking.
+Review and Rating
+Post-stay review submission with star ratings and moderation support.
+Admin Dashboard
+Consolidated view of key operational metrics for administrators and managers.
+Analytics and Reports
+Exportable reports on occupancy, revenue, and customer satisfaction for a selected period.
+Role-Based Access Control
+Differentiated permissions for guests, customers, staff, managers, and administrators.
+Offer and Discount Management
+Creation and application of promotional codes and seasonal discounts.
+8.  Non-Functional Requirements
+8.1 Performance
+The system shall return hotel search results within 3 seconds under normal load conditions (up to 100 concurrent simulated users), and shall process booking and payment transactions within 5 seconds.
+8.2 Security
+The system shall store all passwords using a strong one-way hashing algorithm, transmit all sensitive data over HTTPS, and enforce role-based access control so that users can only access functions and data appropriate to their role. Session tokens shall expire after a defined period of inactivity.
+8.3 Reliability
+The system shall correctly prevent double-booking of the same room for overlapping dates and shall maintain data consistency between the booking, payment, and room availability modules at all times.
+8.4 Availability
+The system shall target an availability of at least 99% during the demonstration and evaluation period, excluding scheduled maintenance windows communicated in advance.
+8.5 Maintainability
+The system shall be developed using a modular architecture with clearly separated layers (presentation, business logic, and data access) to facilitate future maintenance, debugging, and feature extension by developers other than the original authors.
+8.6 Scalability
+The system's database schema and application architecture shall be designed to accommodate additional hotels, rooms, and users without requiring fundamental redesign, even though the academic deployment will operate at a modest scale.
+8.7 Usability
+The user interface shall be intuitive enough for a first-time user to complete a hotel search and booking without external instructions, and shall follow consistent navigation and visual design patterns across all pages.
+8.8 Portability
+The web application shall function correctly on current versions of major browsers, including Chrome, Firefox, Edge, and Safari, and shall be responsive across desktop, tablet, and mobile screen sizes.
+8.9 Backup
+The system's database shall be backed up on a scheduled basis (e.g., daily) during the development and evaluation period to prevent loss of demonstration data.
+8.10 Data Recovery
+In the event of data corruption or accidental deletion, the system shall support restoration from the most recent backup with minimal data loss, targeting a recovery point objective of 24 hours.
+9.  Use Case Summary
+The table below summarises the primary use cases supported by the system, along with the actor(s) responsible for initiating each use case.
+Actor
+Use Case
+Description
+Guest
+UC-01: Search Hotels
+Search for hotels by destination, dates, and number of guests.
+Guest
+UC-02: View Hotel Details
+View detailed information about a hotel, including rooms, amenities, and reviews.
+Guest
+UC-03: Register Account
+Create a new customer account with basic personal details.
+Registered Customer
+UC-04: Login
+Authenticate using registered credentials to access account features.
+Registered Customer
+UC-05: Reset Password
+Recover access to an account via a password reset link or OTP.
+Registered Customer
+UC-06: Update Profile
+Edit personal information such as contact details and password.
+Registered Customer
+UC-07: Select Room
+Choose a room category based on capacity, amenities, and price.
+Registered Customer
+UC-08: Book Room
+Create a new hotel room reservation for selected dates.
+Registered Customer
+UC-09: Make Payment
+Complete payment for a booking through the payment module.
+Registered Customer
+UC-10: View Booking Confirmation
+View and download the confirmation and invoice for a completed booking.
+Registered Customer
+UC-11: Cancel Booking
+Cancel an existing reservation subject to the cancellation policy.
+Registered Customer
+UC-12: Modify Booking
+Change the dates or room type of an existing reservation.
+Registered Customer
+UC-13: View Booking History
+View a list of past and upcoming reservations.
+Registered Customer
+UC-14: Submit Review
+Submit a star rating and written review after a completed stay.
+Receptionist/Staff
+UC-15: Check-in Guest
+Verify guest identity and mark a booking as checked-in.
+Receptionist/Staff
+UC-16: Check-out Guest
+Mark a booking as completed and update room status to vacant.
+Receptionist/Staff
+UC-17: Update Room Status
+Change a room's status (e.g., occupied, vacant, under maintenance).
+Hotel Manager
+UC-18: Manage Rooms
+Add, edit, or remove room categories and configure pricing.
+Hotel Manager
+UC-19: Manage Offers
+Create and manage promotional discounts and offer codes.
+Hotel Manager
+UC-20: Moderate Reviews
+Review and moderate flagged customer feedback.
+Hotel Manager
+UC-21: View Hotel Reports
+View occupancy, revenue, and satisfaction reports for an assigned hotel.
+System Administrator
+UC-22: Manage Users
+Create, suspend, or delete user accounts of any role.
+System Administrator
+UC-23: Manage Hotels
+Onboard and configure hotel properties on the platform.
+System Administrator
+UC-24: View System-Wide Dashboard
+View consolidated metrics and analytics across all hotels.
+10.  System Constraints
+Browser Compatibility: The application must function correctly on the latest two major versions of Chrome, Firefox, Edge, and Safari.
+Internet Dependency: The system requires an active internet connection for all client-server interactions; no offline mode is provided.
+Database Limitations: The relational database used for the project is sized for academic demonstration purposes and is not optimised for large-scale commercial traffic.
+Security Assumptions: Payment processing is simulated; the system does not store real cardholder data and is not subject to PCI-DSS certification requirements.
+Hardware Assumptions: The system is expected to run on standard consumer-grade hardware or common free-tier/academic cloud hosting, without dedicated high-availability infrastructure.
+11.  Assumptions
+Users have access to a stable internet connection while using the system.
+A working simulated online payment option is available and accepted for the purposes of this academic project.
+Every registered user provides a valid, accessible email address for account verification and notifications.
+Hotel staff and managers keep room availability and status information current and accurate.
+The evaluation environment will involve a limited number of concurrent users consistent with an academic demonstration rather than commercial production traffic.
+12.  Future Enhancements
+The following enhancements have been identified as valuable extensions to the system but are outside the scope of the current academic submission:
+AI-based hotel and room recommendations tailored to individual customer preferences and browsing history.
+Fully dynamic, demand-based pricing that adjusts room rates automatically based on occupancy trends.
+A loyalty points programme that rewards repeat customers with discounts or upgrades.
+Dedicated native mobile applications for Android and iOS.
+Multi-language and multi-currency support for international customers.
+An AI-powered chatbot for customer support and booking assistance.
+Virtual, 360-degree room tours to help customers evaluate rooms before booking.
+13.  Project Scope Summary
+The Hotel Management System is a comprehensive, web-based academic project that digitises the complete hotel booking lifecycle, from initial hotel search through to post-stay feedback. It accomplishes this by providing a unified platform on which guests and registered customers can discover, evaluate, and book hotel rooms, and on which hotel staff, managers, and system administrators can manage inventory, bookings, and reporting.
+The system will be used by five categories of stakeholders: guests browsing without an account, registered customers making and managing bookings, receptionist staff handling day-to-day front-desk operations, hotel managers overseeing property-level operations, and system administrators responsible for platform-wide configuration and oversight.
+Major deliverables of this project include:
+This Software Requirements Specification document.
+System design documentation, including architecture diagrams, entity-relationship diagrams, and use case diagrams.
+A functional web application implementing the modules described in this document.
+A test plan and corresponding test case documentation demonstrating verification of key requirements.
+A final project report and demonstration presentation.
+The expected outcome of this project is a working prototype that convincingly demonstrates the principles of requirements engineering, modular system design, secure web application development, and structured software testing, while providing a realistic and practical example of a hotel management platform suitable for academic evaluation.

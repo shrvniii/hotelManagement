@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Access your VHotel membership. Manage bookings, view invoices, and unlock premium concierge benefits.">
-  <title>VHotel | Member Portal</title>
+  <meta name="description" content="Access your VHotels membership. Manage bookings, view invoices, and unlock premium concierge benefits.">
+  <title>VHotels | Member, Staff & Admin Portal</title>
   
   <!-- Font Awesome for premium icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,15 +22,33 @@
   <main class="login-card" id="login-container">
     <header class="login-header">
       <div class="login-logo">VHotels</div>
-      <p>Luxury Member Portal</p>
-      <h2>Welcome Back</h2>
+      <p id="portal-subtitle">Luxury Portal Access</p>
+      <h2 id="portal-heading">Welcome Back</h2>
     </header>
+
+    <!-- Role Selection Tabs: Guest, Staff, Admin -->
+    <div class="role-selector-tabs" style="display: flex; gap: 8px; margin-bottom: 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 15px;">
+      <button type="button" class="role-tab-btn active" id="btn-tab-guest" onclick="selectRole('guest')" style="flex: 1; padding: 10px 5px; border-radius: 6px; border: 1px solid var(--color-gold); background: var(--color-gold); color: #111; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: all 0.25s;">
+        <i class="fas fa-user"></i> Guest
+      </button>
+      <button type="button" class="role-tab-btn" id="btn-tab-staff" onclick="selectRole('staff')" style="flex: 1; padding: 10px 5px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: #fff; font-weight: 500; font-size: 0.82rem; cursor: pointer; transition: all 0.25s;">
+        <i class="fas fa-concierge-bell"></i> Staff
+      </button>
+      <button type="button" class="role-tab-btn" id="btn-tab-admin" onclick="selectRole('admin')" style="flex: 1; padding: 10px 5px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: #fff; font-weight: 500; font-size: 0.82rem; cursor: pointer; transition: all 0.25s;">
+        <i class="fas fa-crown"></i> Admin
+      </button>
+    </div>
+
+    <!-- Active Role Context Notice -->
+    <div id="role-context-hint" style="font-size: 0.78rem; color: rgba(255,255,255,0.7); margin-bottom: 15px; text-align: center;">
+      Logging in as: <strong style="color: var(--color-gold);">Guest / Member</strong> (Siddharth Verma)
+    </div>
 
     <form class="login-form" id="member-login-form" novalidate>
       <!-- Email Field (Floating Label) -->
       <div class="form-group">
         <div class="input-wrapper">
-          <input type="email" id="email" placeholder=" " required autocomplete="email">
+          <input type="email" id="email" value="member@vhotels.com" placeholder=" " required autocomplete="email">
           <label for="email">Email Address</label>
         </div>
         <span class="error-msg" id="email-error"></span>
@@ -39,7 +57,7 @@
       <!-- Password Field (Floating Label) -->
       <div class="form-group">
         <div class="input-wrapper">
-          <input type="password" id="password" placeholder=" " required autocomplete="current-password">
+          <input type="password" id="password" value="Member@123" placeholder=" " required autocomplete="current-password">
           <label for="password">Password</label>
           <span class="toggle-password" id="eye-toggle"><i class="fas fa-eye"></i></span>
         </div>
@@ -49,17 +67,17 @@
       <!-- Remember Me & Forgot Password -->
       <div class="form-options">
         <label class="remember-me">
-          <input type="checkbox" id="remember">
+          <input type="checkbox" id="remember" checked>
           <span class="checkbox-custom"></span>
           Remember Me
         </label>
-        <a href="#" class="forgot-password" onclick="alert('A password reset code has been sent if the email exists.');">Forgot Password?</a>
+        <a href="#" class="forgot-password" onclick="alert('Password reset link sent to your registered email.'); return false;">Forgot Password?</a>
       </div>
 
       <!-- Action Buttons -->
       <div class="login-actions">
         <button type="submit" class="btn-gold" id="btn-submit">Login Portal</button>
-        <button type="button" class="btn-outline" id="btn-guest" onclick="alert('Entering guest browsing view.'); window.location.href='index.html';">Continue as Guest</button>
+        <button type="button" class="btn-outline" id="btn-guest" onclick="window.location.href='index.html';">Continue as Guest</button>
       </div>
     </form>
 
@@ -75,6 +93,133 @@
   </main>
 
   <!-- Frontend Logic -->
-  <script src="script.js"></script>
+  <script src="vhotels.js"></script>
+  <script>
+    const roleConfig = {
+      guest: {
+        title: 'Guest / Member (Siddharth Verma)',
+        email: 'member@vhotels.com',
+        pass: 'Member@123',
+        subtitle: 'Luxury Guest Portal'
+      },
+      staff: {
+        title: 'Hotel Staff (Ananya Patel)',
+        email: 'staff@vhotels.com',
+        pass: 'Staff@123',
+        subtitle: 'VIP Concierge & Staff Portal'
+      },
+      admin: {
+        title: 'Administrator (Rajesh Sharma)',
+        email: 'admin@vhotels.com',
+        pass: 'Admin@123',
+        subtitle: 'Executive Management Portal'
+      }
+    };
+
+    let selectedRole = 'guest';
+
+    function selectRole(role) {
+      selectedRole = role;
+      
+      // Update Tab styling
+      ['guest', 'staff', 'admin'].forEach(r => {
+        const btn = document.getElementById(`btn-tab-${r}`);
+        if (r === role) {
+          btn.style.background = 'var(--color-gold)';
+          btn.style.borderColor = 'var(--color-gold)';
+          btn.style.color = '#111';
+          btn.style.fontWeight = '700';
+        } else {
+          btn.style.background = 'transparent';
+          btn.style.borderColor = 'rgba(255,255,255,0.25)';
+          btn.style.color = '#fff';
+          btn.style.fontWeight = '500';
+        }
+      });
+
+      // Update inputs & hints
+      const cfg = roleConfig[role];
+      document.getElementById('portal-subtitle').textContent = cfg.subtitle;
+      document.getElementById('role-context-hint').innerHTML = `Logging in as: <strong style="color: var(--color-gold);">${cfg.title}</strong>`;
+      document.getElementById('email').value = cfg.email;
+      document.getElementById('password').value = cfg.pass;
+
+      // Clear any validation errors
+      document.getElementById('email-error').textContent = '';
+      document.getElementById('email-error').classList.remove('visible');
+      document.getElementById('password-error').textContent = '';
+      document.getElementById('password-error').classList.remove('visible');
+    }
+
+    // Toggle password visibility
+    document.getElementById('eye-toggle')?.addEventListener('click', () => {
+      const p = document.getElementById('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+      const icon = document.querySelector('#eye-toggle i');
+      if (icon) {
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+      }
+    });
+
+    // Form submission
+    document.getElementById('member-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const emailErr = document.getElementById('email-error');
+      const passErr = document.getElementById('password-error');
+
+      emailErr.textContent = ''; emailErr.classList.remove('visible');
+      passErr.textContent = ''; passErr.classList.remove('visible');
+
+      if (!email) {
+        emailErr.textContent = 'Email address is required.';
+        emailErr.classList.add('visible');
+        return;
+      }
+      if (!password) {
+        passErr.textContent = 'Password is required.';
+        passErr.classList.add('visible');
+        return;
+      }
+
+      const btn = document.getElementById('btn-submit');
+      btn.textContent = 'Verifying...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          VHotels.showToast(data.message, 'success');
+          setTimeout(() => {
+            if (data.user.role === 'admin') {
+              window.location.href = 'admin_dashboard.html';
+            } else if (data.user.role === 'staff') {
+              window.location.href = 'staff_dashboard.html';
+            } else {
+              window.location.href = 'profile.html';
+            }
+          }, 600);
+        } else {
+          passErr.textContent = data.message || 'Login failed.';
+          passErr.classList.add('visible');
+          btn.textContent = 'Login Portal';
+          btn.disabled = false;
+        }
+      } catch (err) {
+        passErr.textContent = 'Server connection error. Please try again.';
+        passErr.classList.add('visible');
+        btn.textContent = 'Login Portal';
+        btn.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>

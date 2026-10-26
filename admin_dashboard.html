@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VHotels Executive Administration Center. Financial KPIs, room occupancy, guest management, and security controls.">
+  <title>VHotels | Executive Admin Center</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="background: var(--color-off-white);">
+
+  <!-- Navbar -->
+  <nav class="navbar sticky" id="nav-header">
+    <div class="container">
+      <a href="index.html" class="logo" id="nav-logo">VHOTELS</a>
+      <ul class="nav-links" id="menu-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="suites.html">Suites</a></li>
+        <li><a href="admin_dashboard.html" class="active" style="color: var(--color-gold);"><i class="fas fa-crown"></i> Executive Admin</a></li>
+        <li><a href="staff_dashboard.html"><i class="fas fa-concierge-bell"></i> Staff Portal</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li class="nav-btn"><button onclick="VHotels.logout()" class="btn-gold" style="padding: 8px 18px; font-size: 0.8rem;">Logout</button></li>
+      </ul>
+      <div class="mobile-menu-btn" id="mobile-toggle">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Executive Header Banner -->
+  <header style="background: #111; color: #fff; padding: 50px 20px 35px; border-bottom: 2px solid var(--color-gold);">
+    <div class="container">
+      <span class="gold-text" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.25em; font-weight: 600;">
+        <i class="fas fa-crown"></i> Executive Management & Financial Control
+      </span>
+      <h1 style="font-family: var(--font-serif); font-size: 2.4rem; margin: 5px 0 0; color: #fff;">Estate Analytics & Administration</h1>
+    </div>
+  </header>
+
+  <main class="container section-padding">
+    
+    <!-- 4 KPI Cards Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 35px;">
+      
+      <!-- Card 1: Revenue -->
+      <div style="background: #ffffff; border-radius: 12px; padding: 25px; border: 1px solid var(--color-light-gray); box-shadow: var(--shadow-glass);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 600;">Gross Revenue</span>
+          <i class="fas fa-rupee-sign" style="color: var(--color-gold); font-size: 1.2rem;"></i>
+        </div>
+        <div id="stat-revenue" style="font-size: 2rem; font-weight: 700; color: #111;">₹0</div>
+        <span style="font-size: 0.75rem; color: #27ae60;"><i class="fas fa-arrow-up"></i> Confirmed Luxury Stays</span>
+      </div>
+
+      <!-- Card 2: Occupancy Rate -->
+      <div style="background: #ffffff; border-radius: 12px; padding: 25px; border: 1px solid var(--color-light-gray); box-shadow: var(--shadow-glass);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 600;">Estate Occupancy</span>
+          <i class="fas fa-chart-pie" style="color: var(--color-gold); font-size: 1.2rem;"></i>
+        </div>
+        <div id="stat-occupancy" style="font-size: 2rem; font-weight: 700; color: #111;">0%</div>
+        <span id="stat-rooms-ratio" style="font-size: 0.75rem; color: #777;">0 of 0 Rooms Booked</span>
+      </div>
+
+      <!-- Card 3: Total Bookings -->
+      <div style="background: #ffffff; border-radius: 12px; padding: 25px; border: 1px solid var(--color-light-gray); box-shadow: var(--shadow-glass);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 600;">Active Bookings</span>
+          <i class="fas fa-calendar-check" style="color: var(--color-gold); font-size: 1.2rem;"></i>
+        </div>
+        <div id="stat-bookings" style="font-size: 2rem; font-weight: 700; color: #111;">0</div>
+        <span style="font-size: 0.75rem; color: #2980b9;">Verified in SQLite Database</span>
+      </div>
+
+      <!-- Card 4: Registered Members -->
+      <div style="background: #ffffff; border-radius: 12px; padding: 25px; border: 1px solid var(--color-light-gray); box-shadow: var(--shadow-glass);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 600;">Elite Guests</span>
+          <i class="fas fa-users" style="color: var(--color-gold); font-size: 1.2rem;"></i>
+        </div>
+        <div id="stat-guests" style="font-size: 2rem; font-weight: 700; color: #111;">0</div>
+        <span style="font-size: 0.75rem; color: #777;">VIP Hospitality Accounts</span>
+      </div>
+
+    </div>
+
+    <!-- Navigation Tabs for Admin Sections -->
+    <div style="display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 12px;">
+      <button id="tab-btn-users" onclick="switchAdminTab('users')" style="background: none; border: none; font-size: 1rem; font-weight: 600; color: var(--color-gold); cursor: pointer; padding: 5px 10px; border-bottom: 3px solid var(--color-gold); margin-bottom: -15px;">
+        <i class="fas fa-user-shield"></i> User & Security Management
+      </button>
+      <button id="tab-btn-suites" onclick="switchAdminTab('suites')" style="background: none; border: none; font-size: 1rem; font-weight: 600; color: #777; cursor: pointer; padding: 5px 10px;">
+        <i class="fas fa-hotel"></i> Suite Inventory & Status
+      </button>
+    </div>
+
+    <!-- Tab 1: User Management -->
+    <div id="tab-users-content" style="background: #ffffff; border-radius: 16px; padding: 35px; box-shadow: var(--shadow-glass); border: 1px solid var(--color-light-gray);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+        <div>
+          <h2 style="font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 5px;">Registered Accounts & Roles</h2>
+          <span id="user-counter" style="color: #777; font-size: 0.9rem;">Loading accounts...</span>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="admin-user-search" placeholder="Search name, email, or role..." style="padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; outline: none; width: 260px;">
+          <select id="admin-user-filter-role" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; outline: none; background: #fff;">
+            <option value="all">All Roles</option>
+            <option value="guest">Guests</option>
+            <option value="staff">Staff</option>
+            <option value="admin">Administrators</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: #fafafa; border-bottom: 2px solid #eee; color: #555; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+              <th style="padding: 14px 16px;">ID</th>
+              <th style="padding: 14px 16px;">Member Name</th>
+              <th style="padding: 14px 16px;">Email & Phone</th>
+              <th style="padding: 14px 16px;">Role</th>
+              <th style="padding: 14px 16px;">Preferred Resort</th>
+              <th style="padding: 14px 16px;">Status</th>
+              <th style="padding: 14px 16px; text-align: right;">Security Action</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 2: Suite Inventory Status -->
+    <div id="tab-suites-content" style="display: none; background: #ffffff; border-radius: 16px; padding: 35px; box-shadow: var(--shadow-glass); border: 1px solid var(--color-light-gray);">
+      <div style="margin-bottom: 25px;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 5px;">Estate Inventory Overview</h2>
+        <span style="color: #777; font-size: 0.9rem;">Real-time inventory levels, pricing, and room allocations.</span>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: #fafafa; border-bottom: 2px solid #eee; color: #555; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+              <th style="padding: 14px 16px;">Code</th>
+              <th style="padding: 14px 16px;">Suite Name</th>
+              <th style="padding: 14px 16px;">Resort Location</th>
+              <th style="padding: 14px 16px;">Type</th>
+              <th style="padding: 14px 16px;">Rate / Night</th>
+              <th style="padding: 14px 16px;">Max Guests</th>
+              <th style="padding: 14px 16px;">Inventory Status</th>
+            </tr>
+          </thead>
+          <tbody id="inventory-tbody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="vhotels.js"></script>
+  <script>
+    let adminUsersList = [];
+    let currentAdminUser = null;
+
+    async function checkAdminAuth() {
+      try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+        if (!data.authenticated || data.user.role !== 'admin') {
+          alert('Access denied: Executive Administrator credentials required.');
+          window.location.href = 'login.html';
+          return;
+        }
+        currentAdminUser = data.user;
+        loadAdminStats();
+        loadAdminUsers();
+        loadInventory();
+      } catch (e) {
+        window.location.href = 'login.html';
+      }
+    }
+
+    async function loadAdminStats() {
+      try {
+        const res = await fetch('/api/admin/stats');
+        const data = await res.json();
+        if (data.success) {
+          const s = data.stats;
+          document.getElementById('stat-revenue').textContent = `₹${Number(s.total_revenue).toLocaleString('en-IN')}`;
+          document.getElementById('stat-occupancy').textContent = `${s.occupancy_pct}%`;
+          document.getElementById('stat-rooms-ratio').textContent = `${s.total_rooms - s.available_rooms} of ${s.total_rooms} Rooms Occupied`;
+          document.getElementById('stat-bookings').textContent = s.active_bookings;
+          document.getElementById('stat-guests').textContent = s.total_guests;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadAdminUsers() {
+      try {
+        const res = await fetch('/api/admin/users');
+        const data = await res.json();
+        if (data.success) {
+          adminUsersList = data.users;
+          renderUsersTable();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderUsersTable() {
+      const q = document.getElementById('admin-user-search').value.toLowerCase().trim();
+      const role = document.getElementById('admin-user-filter-role').value;
+
+      const filtered = adminUsersList.filter(u => {
+        const name = `${u.first_name} ${u.last_name}`.toLowerCase();
+        const matchesQ = !q || name.includes(q) || u.email.toLowerCase().includes(q) || (u.mobile && u.mobile.includes(q));
+        const matchesRole = role === 'all' || u.role === role;
+        return matchesQ && matchesRole;
+      });
+
+      const tbody = document.getElementById('users-tbody');
+      document.getElementById('user-counter').textContent = `Showing ${filtered.length} of ${adminUsersList.length} users`;
+
+      tbody.innerHTML = filtered.map(u => {
+        const isSelf = u.id === currentAdminUser.id;
+        const isSuspended = u.status === 'suspended';
+        const roleBadge = u.role === 'admin' 
+          ? `<span style="background: rgba(201,162,39,0.15); color: var(--color-gold); padding: 3px 8px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase;">Admin</span>`
+          : u.role === 'staff'
+          ? `<span style="background: #cce5ff; color: #004085; padding: 3px 8px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase;">Staff</span>`
+          : `<span style="background: #e2e3e5; color: #383d41; padding: 3px 8px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase;">Guest</span>`;
+
+        const statusBadge = isSuspended
+          ? `<span style="background: #f8d7da; color: #721c24; padding: 3px 8px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase;">Suspended</span>`
+          : `<span style="background: #d4edda; color: #155724; padding: 3px 8px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase;">Active</span>`;
+
+        return `
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 14px 16px; color: #888;">#${u.id}</td>
+            <td style="padding: 14px 16px; font-weight: 600;">${u.title || ''} ${u.first_name} ${u.last_name}</td>
+            <td style="padding: 14px 16px;">
+              <div>${u.email}</div>
+              <div style="font-size: 0.8rem; color: #888;">${u.mobile}</div>
+            </td>
+            <td style="padding: 14px 16px;">${roleBadge}</td>
+            <td style="padding: 14px 16px; font-size: 0.85rem; color: #666;">${u.preferred_resort || '-'}</td>
+            <td style="padding: 14px 16px;">${statusBadge}</td>
+            <td style="padding: 14px 16px; text-align: right;">
+              ${isSelf ? '<span style="color: #999; font-size: 0.8rem;">(Your Account)</span>' : `
+                <button onclick="toggleUser(${u.id})" class="btn-outline" style="padding: 5px 12px; font-size: 0.75rem; cursor: pointer; color: ${isSuspended ? '#27ae60' : '#c0392b'}; border-color: ${isSuspended ? '#27ae60' : '#c0392b'};">
+                  ${isSuspended ? '<i class="fas fa-check"></i> Reactivate' : '<i class="fas fa-ban"></i> Suspend'}
+                </button>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function toggleUser(userId) {
+      if (!confirm('Are you sure you want to change this user account status?')) return;
+      try {
+        const res = await fetch(`/api/admin/users/${userId}/toggle-status`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          VHotels.showToast(data.message, 'info');
+          loadAdminUsers();
+        } else {
+          alert(data.message);
+        }
+      } catch (e) {
+        alert('Network error.');
+      }
+    }
+
+    async function loadInventory() {
+      try {
+        const res = await fetch('/api/suites');
+        const data = await res.json();
+        if (data.success) {
+          const tbody = document.getElementById('inventory-tbody');
+          tbody.innerHTML = data.suites.map(s => `
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 14px 16px; font-weight: 700; color: var(--color-gold);">${s.code}</td>
+              <td style="padding: 14px 16px; font-weight: 600;">${s.name}</td>
+              <td style="padding: 14px 16px;">${s.resort_location}</td>
+              <td style="padding: 14px 16px;"><span class="hotel-badge" style="position: static; font-size: 0.7rem; padding: 2px 8px;">${s.suite_type}</span></td>
+              <td style="padding: 14px 16px; font-weight: 700;">₹${Number(s.price_per_night).toLocaleString('en-IN')}</td>
+              <td style="padding: 14px 16px;">${s.capacity_guests} Guests</td>
+              <td style="padding: 14px 16px;">
+                <span style="font-weight: 600; color: ${s.available_rooms > 0 ? '#27ae60' : '#c0392b'};">
+                  ${s.available_rooms} of ${s.total_rooms} available
+                </span>
+              </td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function switchAdminTab(tab) {
+      const usersContent = document.getElementById('tab-users-content');
+      const suitesContent = document.getElementById('tab-suites-content');
+      const usersBtn = document.getElementById('tab-btn-users');
+      const suitesBtn = document.getElementById('tab-btn-suites');
+
+      if (tab === 'users') {
+        usersContent.style.display = 'block';
+        suitesContent.style.display = 'none';
+        usersBtn.style.color = 'var(--color-gold)';
+        usersBtn.style.borderBottom = '3px solid var(--color-gold)';
+        usersBtn.style.marginBottom = '-15px';
+        suitesBtn.style.color = '#777';
+        suitesBtn.style.borderBottom = 'none';
+        suitesBtn.style.marginBottom = '0';
+      } else {
+        usersContent.style.display = 'none';
+        suitesContent.style.display = 'block';
+        suitesBtn.style.color = 'var(--color-gold)';
+        suitesBtn.style.borderBottom = '3px solid var(--color-gold)';
+        suitesBtn.style.marginBottom = '-15px';
+        usersBtn.style.color = '#777';
+        usersBtn.style.borderBottom = 'none';
+        usersBtn.style.marginBottom = '0';
+      }
+    }
+
+    document.getElementById('admin-user-search').addEventListener('input', renderUsersTable);
+    document.getElementById('admin-user-filter-role').addEventListener('change', renderUsersTable);
+    document.addEventListener('DOMContentLoaded', checkAdminAuth);
+  </script>
+</body>
+</html>

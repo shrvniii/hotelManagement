@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Discover and book bespoke luxury residences, private overwater villas, and alpine chalets across the globe.">
+  <title>VHotels | Luxury Suites & Estates Catalog</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Sticky Navbar -->
+  <nav class="navbar sticky" id="nav-header">
+    <div class="container">
+      <a href="index.html" class="logo" id="nav-logo">VHOTELS</a>
+      <ul class="nav-links" id="menu-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="suites.html" class="active">Suites & Estates</a></li>
+        <li><a href="index.html#dining-experience">Dining</a></li>
+        <li><a href="index.html#why-choose-us">Services</a></li>
+        <li><a href="register.html">Register</a></li>
+        <li class="nav-btn"><a href="login.html" class="btn-gold" style="padding: 10px 22px; font-size: 0.8rem;">Member Login</a></li>
+      </ul>
+      <div class="mobile-menu-btn" id="mobile-toggle">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header Banner -->
+  <header style="background: linear-gradient(rgba(17,17,17,0.7), rgba(17,17,17,0.9)), url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1600') center/cover; padding: 120px 20px 60px; text-align: center; color: #fff;">
+    <div class="container">
+      <span class="gold-text" style="text-transform: uppercase; letter-spacing: 0.25em; font-size: 0.85rem; font-weight: 600;">Worldwide Sanctuaries</span>
+      <h1 style="font-family: var(--font-serif); font-size: 3.2rem; margin: 10px 0 15px; color: #fff;">Luxury Suites & Private Residences</h1>
+      <p style="max-width: 650px; margin: 0 auto; color: rgba(255,255,255,0.75); font-size: 1.05rem;">
+        Immerse yourself in world-class 5-star hospitality. Each suite offers tailor-made butler service, fine dining privileges, and private sanctuaries.
+      </p>
+    </div>
+  </header>
+
+  <!-- Filter & Search Controls Bar -->
+  <section class="container" style="margin-top: -30px; position: relative; z-index: 10;">
+    <div style="background: #ffffff; border-radius: 12px; box-shadow: var(--shadow-dark); padding: 25px 30px; border: 1px solid var(--color-light-gray);">
+      <div style="display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr; gap: 15px; align-items: center;">
+        
+        <!-- Live Search -->
+        <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 8px;">
+          <i class="fas fa-search" style="color: var(--color-gold); margin-left: 12px;"></i>
+          <input type="text" id="suite-search" placeholder="Search suite name, estate, or keyword..." style="background: transparent; border: none; padding: 12px; width: 100%; outline: none; font-size: 0.95rem;">
+        </div>
+
+        <!-- Destination Filter -->
+        <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 8px;">
+          <select id="filter-destination" style="background: transparent; border: none; padding: 12px; width: 100%; outline: none; font-size: 0.9rem; cursor: pointer;">
+            <option value="">All Destinations</option>
+            <option value="Rajasthan">Rajasthan (Udaipur & Jaipur)</option>
+            <option value="Kerala">Kerala (Kumarakom Backwaters)</option>
+            <option value="Goa">Goa (Candolim Beach)</option>
+            <option value="Kashmir">Kashmir (Gulmarg Alpine)</option>
+            <option value="Mumbai">Mumbai (Marine Drive)</option>
+            <option value="Varanasi">Varanasi (Ganga Ghats)</option>
+            <option value="Maldives">Maldives (Overwater)</option>
+            <option value="St. Moritz">St. Moritz (Swiss Alps)</option>
+            <option value="New York">New York City</option>
+          </select>
+        </div>
+
+        <!-- Capacity Filter -->
+        <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 8px;">
+          <select id="filter-capacity" style="background: transparent; border: none; padding: 12px; width: 100%; outline: none; font-size: 0.9rem; cursor: pointer;">
+            <option value="">Any Capacity</option>
+            <option value="2">2+ Guests</option>
+            <option value="3">3+ Guests</option>
+            <option value="4">4+ Guests</option>
+          </select>
+        </div>
+
+        <!-- Suite Type -->
+        <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 8px;">
+          <select id="filter-type" style="background: transparent; border: none; padding: 12px; width: 100%; outline: none; font-size: 0.9rem; cursor: pointer;">
+            <option value="all">All Suite Types</option>
+            <option value="Heritage">Heritage</option>
+            <option value="Exclusive">Exclusive</option>
+            <option value="Chalet">Chalet</option>
+            <option value="Presidential">Presidential</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Suites Grid Section -->
+  <main class="container section-padding">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+      <h2 style="font-family: var(--font-serif); font-size: 1.8rem; margin: 0;">Available Residences</h2>
+      <span id="suite-counter" style="color: #666; font-size: 0.9rem; font-weight: 500;">Loading suites...</span>
+    </div>
+
+    <div id="suites-grid" class="hotels-grid">
+      <!-- Injected via JavaScript -->
+    </div>
+
+    <!-- Empty state -->
+    <div id="no-suites" style="display: none; text-align: center; padding: 60px 20px;">
+      <i class="fas fa-hotel" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
+      <h3>No Residences Found</h3>
+      <p style="color: #666;">Try adjusting your destination or guest capacity filters.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-bottom" style="border: none; padding: 30px 0;">
+      <p>&copy; 2026 VHotels Resorts & Hotels. All rights reserved.</p>
+      <div><a href="index.html" style="color: var(--color-gold);">Back to Home</a></div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="vhotels.js"></script>
+  <script>
+    let allSuites = [];
+
+    async function loadSuites() {
+      try {
+        const res = await fetch('/api/suites');
+        const data = await res.json();
+        if (data.success) {
+          allSuites = data.suites;
+
+          // Check URL query parameters
+          const params = new URLSearchParams(window.location.search);
+          const loc = params.get('location');
+          const guests = params.get('guests');
+          if (loc) {
+            document.getElementById('filter-destination').value = loc;
+          }
+          if (guests) {
+            document.getElementById('filter-capacity').value = guests;
+          }
+
+          renderFilteredSuites();
+        }
+      } catch (err) {
+        document.getElementById('suites-grid').innerHTML = '<p style="color: red;">Error loading suite inventory.</p>';
+      }
+    }
+
+    function renderFilteredSuites() {
+      const q = document.getElementById('suite-search').value.toLowerCase().trim();
+      const dest = document.getElementById('filter-destination').value.toLowerCase();
+      const cap = parseInt(document.getElementById('filter-capacity').value) || 0;
+      const type = document.getElementById('filter-type').value.toLowerCase();
+
+      const filtered = allSuites.filter(s => {
+        const matchesQ = !q || s.name.toLowerCase().includes(q) || s.resort_location.toLowerCase().includes(q) || s.description.toLowerCase().includes(q);
+        const matchesDest = !dest || s.resort_location.toLowerCase().includes(dest);
+        const matchesCap = !cap || s.capacity_guests >= cap;
+        const matchesType = type === 'all' || !type || s.suite_type.toLowerCase() === type;
+        return matchesQ && matchesDest && matchesCap && matchesType;
+      });
+
+      const grid = document.getElementById('suites-grid');
+      const counter = document.getElementById('suite-counter');
+      const empty = document.getElementById('no-suites');
+
+      counter.textContent = `Displaying ${filtered.length} of ${allSuites.length} suites`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      grid.innerHTML = filtered.map(s => {
+        const priceFmt = Number(s.price_per_night).toLocaleString('en-IN');
+        const availPct = Math.round((s.available_rooms / s.total_rooms) * 100);
+        const isSoldOut = s.available_rooms <= 0;
+
+        return `
+          <div class="hotel-card" style="box-shadow: 0 10px 30px rgba(0,0,0,0.06); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
+            <div class="hotel-img-wrapper" style="position: relative; height: 260px;">
+              <img src="${s.image_url}" alt="${s.name}" style="width: 100%; height: 100%; object-fit: cover;">
+              <span class="hotel-badge" style="position: absolute; top: 15px; left: 15px;">${s.suite_type}</span>
+              ${isSoldOut ? '<span style="position: absolute; top: 15px; right: 15px; background: #e74c3c; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">Sold Out</span>' : ''}
+            </div>
+            <div class="hotel-info" style="padding: 25px; flex: 1; display: flex; flex-direction: column;">
+              <div class="hotel-rating" style="color: var(--color-gold); font-size: 0.85rem; margin-bottom: 8px;">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <span style="color: #777; margin-left: 6px;">(${s.rating} / ${s.reviews_count} Reviews)</span>
+              </div>
+              <div class="hotel-title">
+                <h3 style="font-size: 1.35rem; margin-bottom: 5px;">${s.name}</h3>
+                <span style="font-size: 0.8rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 12px;">
+                  <i class="fas fa-map-marker-alt"></i> ${s.resort_location}
+                </span>
+              </div>
+              <p class="hotel-desc" style="font-size: 0.9rem; color: #666; margin-bottom: 15px; flex: 1;">
+                ${s.description}
+              </p>
+
+              <!-- Capacity & Inventory Meter -->
+              <div style="background: #fdfaf3; border: 1px solid rgba(201,162,39,0.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; font-size: 0.85rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                  <span><i class="fas fa-user-friends" style="color: var(--color-gold);"></i> Max Guests: <strong>${s.capacity_guests}</strong></span>
+                  <span style="color: ${s.available_rooms > 1 ? '#27ae60' : '#e67e22'}; font-weight: 600;">
+                    ${s.available_rooms} of ${s.total_rooms} Available
+                  </span>
+                </div>
+                <div style="background: #e0e0e0; height: 6px; border-radius: 3px; overflow: hidden;">
+                  <div style="background: var(--color-gold); width: ${availPct}%; height: 100%;"></div>
+                </div>
+              </div>
+
+              <div class="hotel-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 15px;">
+                <div class="hotel-price" style="font-size: 0.9rem; color: #666;">
+                  From <span style="font-size: 1.3rem; font-weight: 700; color: #111;">₹${priceFmt}</span> <span style="font-size: 0.75rem;">/ night</span>
+                </div>
+                ${isSoldOut 
+                  ? `<button disabled class="btn-outline" style="opacity: 0.5; cursor: not-allowed; padding: 8px 18px; font-size: 0.85rem;">Sold Out</button>`
+                  : `<a href="booking.html?suite_id=${s.id}" class="btn-gold" style="padding: 10px 20px; font-size: 0.85rem; text-decoration: none;">Reserve Suite <i class="fas fa-arrow-right"></i></a>`
+                }
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Attach listeners
+    document.getElementById('suite-search').addEventListener('input', renderFilteredSuites);
+    document.getElementById('filter-destination').addEventListener('change', renderFilteredSuites);
+    document.getElementById('filter-capacity').addEventListener('change', renderFilteredSuites);
+    document.getElementById('filter-type').addEventListener('change', renderFilteredSuites);
+
+    document.addEventListener('DOMContentLoaded', loadSuites);
+  </script>
+</body>
+</html>

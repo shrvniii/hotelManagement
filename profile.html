@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Manage your VHotel profile, active suite reservations, and luxury concierge preferences.">
-  <title>VHotels | Member Profile</title>
+  <meta name="description" content="Manage your VHotels profile, active suite reservations, digital vouchers, and concierge preferences.">
+  <title>VHotels | Member Profile & Reservations</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body style="background: var(--color-off-white);">
 
   <!-- Navigation Bar -->
   <nav class="navbar sticky" id="nav-header">
@@ -18,89 +18,108 @@
       
       <ul class="nav-links" id="menu-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="index.html#featured-hotels">Hotels</a></li>
-        <li><a href="index.html#dining-experience">Dining</a></li>
+        <li><a href="suites.html">Suites</a></li>
         <li><a href="profile.html" class="active">Profile</a></li>
         <li class="nav-btn"><button id="btn-logout" class="btn-gold" style="padding: 8px 20px; font-size: 0.75rem;">Logout</button></li>
       </ul>
+      <div class="mobile-menu-btn" id="mobile-toggle">
+        <span></span><span></span><span></span>
+      </div>
     </div>
   </nav>
 
   <!-- Main Profile Container -->
-  <main class="container section-padding" style="margin-top: 60px;">
-    <div class="profile-card" id="profile-container">
-      <header class="profile-header">
-        <div class="profile-avatar">
+  <main class="container section-padding" style="margin-top: 40px;">
+    
+    <!-- Profile Card Header -->
+    <div class="profile-card" id="profile-container" style="background: #ffffff; border: 1px solid var(--color-light-gray); border-radius: 16px; padding: 40px; box-shadow: var(--shadow-glass); margin-bottom: 40px;">
+      <header class="profile-header" style="display: flex; align-items: center; gap: 25px; padding-bottom: 25px; border-bottom: 1px solid #eee; margin-bottom: 30px;">
+        <div class="profile-avatar" style="font-size: 4rem; color: var(--color-gold);">
           <i class="fas fa-user-circle"></i>
         </div>
         <div class="profile-title-group">
-          <span class="badge-gold"><i class="fas fa-crown"></i> Royal Elite Member</span>
-          <h1 id="profile-full-name">Guest Member</h1>
-          <p id="profile-email">member@vhotels.com</p>
+          <span class="badge-gold"><i class="fas fa-crown"></i> <span id="badge-role">Royal Elite Member</span></span>
+          <h1 id="profile-full-name" style="font-family: var(--font-serif); font-size: 2.2rem; margin: 6px 0 2px;">Guest Member</h1>
+          <p id="profile-email" style="color: #777; font-size: 0.95rem;">member@vhotels.com</p>
         </div>
       </header>
 
-      <div class="profile-single-column">
-        <!-- Personal Details Box -->
-        <div class="profile-box">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h3 style="margin-bottom: 0;"><i class="fas fa-id-card"></i> Personal Details</h3>
-            <button id="btn-open-edit-modal" class="btn-gold" style="padding: 8px 18px; font-size: 0.85rem; cursor: pointer;">
-              <i class="fas fa-edit"></i> Edit Profile
-            </button>
-          </div>
+      <!-- Personal Details Section -->
+      <div class="profile-box" style="border: 1px solid #eee; border-radius: 12px; padding: 25px; background: #fafafa;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0; color: #111;">
+            <i class="fas fa-id-card" style="color: var(--color-gold);"></i> Membership Credentials
+          </h3>
+          <button id="btn-open-edit-modal" class="btn-gold" style="padding: 8px 18px; font-size: 0.85rem; cursor: pointer;">
+            <i class="fas fa-edit"></i> Edit Details
+          </button>
+        </div>
 
-          <div class="profile-info-list">
-            <div class="profile-info-item">
-              <span class="label">Salutation / Title:</span>
-              <span class="value" id="disp-title">-</span>
-            </div>
-            <div class="profile-info-item">
-              <span class="label">First Name:</span>
-              <span class="value" id="disp-first-name">-</span>
-            </div>
-            <div class="profile-info-item">
-              <span class="label">Last Name:</span>
-              <span class="value" id="disp-last-name">-</span>
-            </div>
-            <div class="profile-info-item">
-              <span class="label">Date of Birth:</span>
-              <span class="value" id="disp-dob">-</span>
-            </div>
-            <div class="profile-info-item">
-              <span class="label">Email Address:</span>
-              <span class="value" id="disp-email">-</span>
-            </div>
-            <div class="profile-info-item">
-              <span class="label">Mobile Number:</span>
-              <span class="value" id="disp-mobile">-</span>
-            </div>
-            <div class="profile-info-item">
-              <span class="label">Preferred Resort:</span>
-              <span class="value" id="disp-resort">-</span>
-            </div>
-            <div class="profile-info-item">
-              <span class="label">Residential Address:</span>
-              <span class="value" id="disp-address">-</span>
-            </div>
+        <div class="profile-info-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px 30px; font-size: 0.95rem;">
+          <div class="profile-info-item" style="border-bottom: 1px dashed #ddd; padding-bottom: 8px;">
+            <span class="label" style="color: #666; font-weight: 600;">Title / Salutation:</span>
+            <span class="value" id="disp-title" style="font-weight: 500; color: #111;">-</span>
+          </div>
+          <div class="profile-info-item" style="border-bottom: 1px dashed #ddd; padding-bottom: 8px;">
+            <span class="label" style="color: #666; font-weight: 600;">Full Name:</span>
+            <span class="value" id="disp-name" style="font-weight: 500; color: #111;">-</span>
+          </div>
+          <div class="profile-info-item" style="border-bottom: 1px dashed #ddd; padding-bottom: 8px;">
+            <span class="label" style="color: #666; font-weight: 600;">Date of Birth:</span>
+            <span class="value" id="disp-dob" style="font-weight: 500; color: #111;">-</span>
+          </div>
+          <div class="profile-info-item" style="border-bottom: 1px dashed #ddd; padding-bottom: 8px;">
+            <span class="label" style="color: #666; font-weight: 600;">Email Address:</span>
+            <span class="value" id="disp-email" style="font-weight: 500; color: #111;">-</span>
+          </div>
+          <div class="profile-info-item" style="border-bottom: 1px dashed #ddd; padding-bottom: 8px;">
+            <span class="label" style="color: #666; font-weight: 600;">Mobile Number:</span>
+            <span class="value" id="disp-mobile" style="font-weight: 500; color: #111;">-</span>
+          </div>
+          <div class="profile-info-item" style="border-bottom: 1px dashed #ddd; padding-bottom: 8px;">
+            <span class="label" style="color: #666; font-weight: 600;">Preferred Resort:</span>
+            <span class="value" id="disp-resort" style="font-weight: 500; color: #111;">-</span>
+          </div>
+          <div class="profile-info-item" style="grid-column: 1 / -1; border-bottom: 1px dashed #ddd; padding-bottom: 8px;">
+            <span class="label" style="color: #666; font-weight: 600;">Residential Address:</span>
+            <span class="value" id="disp-address" style="font-weight: 500; color: #111;">-</span>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- My Luxury Reservations Section -->
+    <section id="my-bookings" style="background: #ffffff; border: 1px solid var(--color-light-gray); border-radius: 16px; padding: 40px; box-shadow: var(--shadow-glass);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <div>
+          <h2 style="font-family: var(--font-serif); font-size: 1.8rem; margin: 0 0 5px;">My Luxury Reservations</h2>
+          <p style="color: #777; font-size: 0.9rem; margin: 0;">View confirmed stays, print official vouchers, or manage dates.</p>
+        </div>
+        <a href="suites.html" class="btn-gold" style="padding: 9px 20px; font-size: 0.85rem; text-decoration: none;">
+          <i class="fas fa-plus"></i> Book Another Suite
+        </a>
+      </div>
+
+      <div id="bookings-list-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
   </main>
 
   <!-- Edit Profile Modal -->
   <div class="modal-overlay" id="edit-profile-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2><i class="fas fa-user-edit" style="color: var(--color-gold);"></i> Edit Member Profile</h2>
+    <div class="modal-card" style="background: #ffffff; color: #111; max-width: 580px; border-radius: 12px; padding: 30px;">
+      <div class="modal-header" style="border-bottom: 1px solid #eee; margin-bottom: 20px;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.5rem;"><i class="fas fa-user-edit" style="color: var(--color-gold);"></i> Edit Member Profile</h2>
         <button class="modal-close" id="btn-close-edit-modal">&times;</button>
       </div>
       <form id="edit-profile-form" novalidate>
+        
         <div class="form-row">
           <div class="form-group" style="flex: 0.4;">
-            <div class="input-wrapper">
-              <select id="edit-title" required>
+            <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 6px;">
+              <select id="edit-title" required style="padding: 10px; width: 100%; border: none; background: transparent;">
                 <option value="Mr.">Mr.</option>
                 <option value="Ms.">Ms.</option>
                 <option value="Mrs.">Mrs.</option>
@@ -109,80 +128,285 @@
                 <option value="Lady">Lady</option>
               </select>
             </div>
-            <span class="error-msg" id="edit-title-error"></span>
           </div>
-
           <div class="form-group" style="flex: 1;">
-            <div class="input-wrapper">
-              <input type="text" id="edit-first-name" placeholder=" " required>
-              <label for="edit-first-name">First Name (min 6 letters)</label>
+            <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 6px;">
+              <input type="text" id="edit-first-name" placeholder="First Name (alphabets only)" required style="padding: 10px; width: 100%; border: none; background: transparent;">
             </div>
-            <span class="error-msg" id="edit-first-name-error"></span>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <div class="input-wrapper">
-              <input type="text" id="edit-last-name" placeholder=" " required>
-              <label for="edit-last-name">Last Name</label>
+            <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 6px;">
+              <input type="text" id="edit-last-name" placeholder="Last Name" required style="padding: 10px; width: 100%; border: none; background: transparent;">
             </div>
-            <span class="error-msg" id="edit-last-name-error"></span>
           </div>
-
           <div class="form-group">
-            <div class="input-wrapper">
-              <input type="date" id="edit-dob" required>
-              <label for="edit-dob" style="top: -10px; font-size: 0.75rem; color: var(--color-gold);">Date of Birth</label>
+            <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 6px;">
+              <input type="date" id="edit-dob" style="padding: 10px; width: 100%; border: none; background: transparent;">
             </div>
-            <span class="error-msg" id="edit-dob-error"></span>
           </div>
         </div>
 
         <div class="form-group">
-          <div class="input-wrapper">
-            <input type="email" id="edit-email" placeholder=" " required>
-            <label for="edit-email">Email Address</label>
+          <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 6px;">
+            <input type="tel" id="edit-mobile" placeholder="Mobile Number (10 digits)" required maxlength="10" style="padding: 10px; width: 100%; border: none; background: transparent;">
           </div>
-          <span class="error-msg" id="edit-email-error"></span>
         </div>
 
         <div class="form-group">
-          <div class="input-wrapper">
-            <input type="tel" id="edit-mobile" placeholder=" " required>
-            <label for="edit-mobile">Mobile Number (10 digits)</label>
-          </div>
-          <span class="error-msg" id="edit-mobile-error"></span>
-        </div>
-
-        <div class="form-group">
-          <div class="input-wrapper">
-            <select id="edit-resort" required>
-              <option value="VHotels Palace (Rajasthan)">VHotels Palace (Rajasthan, India)</option>
+          <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 6px;">
+            <select id="edit-resort" style="padding: 10px; width: 100%; border: none; background: transparent;">
+              <option value="VHotels Palace (Rajasthan)">VHotels Palace (Rajasthan)</option>
+              <option value="VHotels Backwaters (Kerala)">VHotels Backwaters (Kerala)</option>
+              <option value="VHotels Coastal (Goa)">VHotels Coastal (Goa)</option>
+              <option value="VHotels Bay (Mumbai)">VHotels Bay (Mumbai)</option>
+              <option value="VHotels Himalayan (Kashmir)">VHotels Himalayan (Kashmir)</option>
+              <option value="VHotels Heritage (Varanasi)">VHotels Heritage (Varanasi)</option>
               <option value="VHotels Riviera (Maldives)">VHotels Riviera (Maldives)</option>
               <option value="VHotels Alpine Lodge (St. Moritz)">VHotels Alpine Lodge (St. Moritz)</option>
+              <option value="VHotels Heights (New York)">VHotels Heights (New York)</option>
             </select>
           </div>
-          <span class="error-msg" id="edit-resort-error"></span>
         </div>
 
         <div class="form-group">
-          <div class="input-wrapper input-wrapper-textarea">
-            <textarea id="edit-address" placeholder=" " required rows="2"></textarea>
-            <label for="edit-address">Residential Address</label>
+          <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 6px;">
+            <textarea id="edit-address" rows="2" placeholder="Full Address" required style="padding: 10px; width: 100%; border: none; background: transparent; font-family: inherit;"></textarea>
           </div>
-          <span class="error-msg" id="edit-address-error"></span>
         </div>
 
-        <div class="modal-actions">
-          <button type="button" class="btn-outline" id="btn-cancel-edit" style="padding: 10px 20px;">Cancel</button>
-          <button type="submit" class="btn-gold" id="btn-save-edit" style="padding: 10px 25px;">Save Changes</button>
+        <div id="edit-modal-error" style="color: #e74c3c; font-size: 0.85rem; margin-bottom: 12px; display: none;"></div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+          <button type="button" id="btn-cancel-edit" class="btn-outline" style="color: #333; border-color: #ccc; padding: 8px 18px;">Cancel</button>
+          <button type="submit" id="btn-save-profile" class="btn-gold" style="padding: 8px 20px;">Save Changes</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Script -->
-  <script src="script.js"></script>
+  <!-- Scripts -->
+  <script src="vhotels.js"></script>
+  <script>
+    let currentProfile = null;
+    let myBookingsList = [];
+
+    async function loadProfileAndBookings() {
+      try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+        if (!data.authenticated) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        currentProfile = data.user;
+        renderProfileDisplay(currentProfile);
+        loadBookings();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderProfileDisplay(u) {
+      document.getElementById('profile-full-name').textContent = `${u.title || ''} ${u.first_name} ${u.last_name}`;
+      document.getElementById('profile-email').textContent = u.email;
+      document.getElementById('badge-role').textContent = u.role === 'admin' ? 'Executive Administrator' : u.role === 'staff' ? 'Concierge Staff' : 'Royal Elite Member';
+
+      document.getElementById('disp-title').textContent = u.title || '-';
+      document.getElementById('disp-name').textContent = `${u.first_name} ${u.last_name}`;
+      document.getElementById('disp-dob').textContent = u.dob || '-';
+      document.getElementById('disp-email').textContent = u.email;
+      document.getElementById('disp-mobile').textContent = u.mobile;
+      document.getElementById('disp-resort').textContent = u.preferred_resort || '-';
+      document.getElementById('disp-address').textContent = u.address;
+    }
+
+    async function loadBookings() {
+      const container = document.getElementById('bookings-list-container');
+      try {
+        const res = await fetch('/api/guest/bookings');
+        const data = await res.json();
+        if (data.success) {
+          myBookingsList = data.bookings;
+          if (myBookingsList.length === 0) {
+            container.innerHTML = `
+              <div style="text-align: center; padding: 50px 20px;">
+                <i class="fas fa-calendar-times" style="font-size: 2.5rem; color: #ccc; margin-bottom: 12px;"></i>
+                <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">No Active Reservations</h3>
+                <p style="color: #777; margin-bottom: 20px;">You currently have no luxury stays reserved with VHotels.</p>
+                <a href="suites.html" class="btn-gold" style="padding: 10px 25px; text-decoration: none;">Explore Available Suites</a>
+              </div>
+            `;
+            return;
+          }
+
+          container.innerHTML = `
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+                <thead>
+                  <tr style="background: #fafafa; border-bottom: 2px solid #eee; color: #555; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+                    <th style="padding: 14px 16px;">Reference</th>
+                    <th style="padding: 14px 16px;">Suite & Location</th>
+                    <th style="padding: 14px 16px;">Check-In</th>
+                    <th style="padding: 14px 16px;">Check-Out</th>
+                    <th style="padding: 14px 16px;">Nights</th>
+                    <th style="padding: 14px 16px;">Total (INR)</th>
+                    <th style="padding: 14px 16px;">Status</th>
+                    <th style="padding: 14px 16px; text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${myBookingsList.map(b => {
+                    const isCancelled = b.status === 'cancelled';
+                    const statusBadge = isCancelled 
+                      ? `<span style="background: #f8d7da; color: #721c24; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase;">Cancelled</span>`
+                      : `<span style="background: #d4edda; color: #155724; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; text-transform: uppercase;">Confirmed</span>`;
+
+                    return `
+                      <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 14px 16px; font-weight: 700; color: var(--color-gold);">${b.booking_reference}</td>
+                        <td style="padding: 14px 16px;">
+                          <div style="font-weight: 600; color: #111;">${b.suite_name}</div>
+                          <div style="font-size: 0.8rem; color: #777;"><i class="fas fa-map-marker-alt"></i> ${b.resort_location}</div>
+                        </td>
+                        <td style="padding: 14px 16px;">${b.check_in_date}</td>
+                        <td style="padding: 14px 16px;">${b.check_out_date}</td>
+                        <td style="padding: 14px 16px;">${b.num_nights}</td>
+                        <td style="padding: 14px 16px; font-weight: 700;">₹${Number(b.total_amount).toLocaleString('en-IN')}</td>
+                        <td style="padding: 14px 16px;">${statusBadge}</td>
+                        <td style="padding: 14px 16px; text-align: right;">
+                          <button onclick="viewVoucher(${b.id})" class="btn-outline" style="padding: 6px 12px; font-size: 0.75rem; color: #111; border-color: #ddd; margin-right: 6px; cursor: pointer;">
+                            <i class="fas fa-ticket-alt"></i> Voucher
+                          </button>
+                          ${!isCancelled ? `
+                            <button onclick="cancelBooking(${b.id})" class="btn-outline" style="padding: 6px 12px; font-size: 0.75rem; color: #c0392b; border-color: #f5c6cb; cursor: pointer;">
+                              Cancel
+                            </button>
+                          ` : ''}
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          `;
+        }
+      } catch (err) {
+        container.innerHTML = '<p style="color: red;">Failed to load reservations.</p>';
+      }
+    }
+
+    function viewVoucher(bookingId) {
+      const b = myBookingsList.find(item => item.id === bookingId);
+      if (b) {
+        b.first_name = currentProfile.first_name;
+        b.last_name = currentProfile.last_name;
+        b.title = currentProfile.title;
+        VHotels.showVoucherModal(b);
+      }
+    }
+
+    async function cancelBooking(bookingId) {
+      if (!confirm('Are you certain you wish to cancel this luxury suite reservation? The room will be returned to the general inventory.')) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/bookings/${bookingId}/cancel`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          VHotels.showToast(data.message, 'info');
+          loadBookings();
+        } else {
+          alert(data.message || 'Cancellation error.');
+        }
+      } catch (e) {
+        alert('Network error attempting cancellation.');
+      }
+    }
+
+    // Modal Handling
+    const editModal = document.getElementById('edit-profile-modal');
+    document.getElementById('btn-open-edit-modal').addEventListener('click', () => {
+      if (!currentProfile) return;
+      document.getElementById('edit-title').value = currentProfile.title || 'Mr.';
+      document.getElementById('edit-first-name').value = currentProfile.first_name || '';
+      document.getElementById('edit-last-name').value = currentProfile.last_name || '';
+      document.getElementById('edit-dob').value = currentProfile.dob || '';
+      document.getElementById('edit-mobile').value = currentProfile.mobile || '';
+      document.getElementById('edit-resort').value = currentProfile.preferred_resort || '';
+      document.getElementById('edit-address').value = currentProfile.address || '';
+      editModal.classList.add('active');
+    });
+
+    const closeModal = () => editModal.classList.remove('active');
+    document.getElementById('btn-close-edit-modal').addEventListener('click', closeModal);
+    document.getElementById('btn-cancel-edit').addEventListener('click', closeModal);
+
+    document.getElementById('edit-profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errBox = document.getElementById('edit-modal-error');
+      errBox.style.display = 'none';
+
+      const title = document.getElementById('edit-title').value;
+      const firstName = document.getElementById('edit-first-name').value.trim();
+      const lastName = document.getElementById('edit-last-name').value.trim();
+      const dob = document.getElementById('edit-dob').value;
+      const mobile = document.getElementById('edit-mobile').value.trim();
+      const resort = document.getElementById('edit-resort').value;
+      const address = document.getElementById('edit-address').value.trim();
+
+      if (!firstName || !/^[A-Za-z]+$/.test(firstName)) {
+        errBox.textContent = 'First name must contain only alphabetic characters (no digits or symbols).';
+        errBox.style.display = 'block';
+        return;
+      }
+      if (!lastName) {
+        errBox.textContent = 'Last name cannot be empty.';
+        errBox.style.display = 'block';
+        return;
+      }
+      if (!mobile || !/^\d{10}$/.test(mobile)) {
+        errBox.textContent = 'Mobile number must be exactly 10 digits.';
+        errBox.style.display = 'block';
+        return;
+      }
+      if (!address) {
+        errBox.textContent = 'Residential address cannot be empty.';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title, first_name: firstName, last_name: lastName, dob, mobile, preferred_resort: resort, address
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          VHotels.showToast('Profile updated successfully!', 'success');
+          currentProfile = data.user;
+          renderProfileDisplay(currentProfile);
+          closeModal();
+        } else {
+          errBox.textContent = data.message || 'Update failed.';
+          errBox.style.display = 'block';
+        }
+      } catch (err) {
+        errBox.textContent = 'Network error updating profile.';
+        errBox.style.display = 'block';
+      }
+    });
+
+    document.getElementById('btn-logout')?.addEventListener('click', () => VHotels.logout());
+    document.addEventListener('DOMContentLoaded', loadProfileAndBookings);
+  </script>
 </body>
 </html>

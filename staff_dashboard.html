@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VHotels VIP Concierge & Staff Portal. Guest check-in management, suite occupancy, and CSV roster export.">
+  <title>VHotels | Concierge & Staff Portal</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="background: var(--color-off-white);">
+
+  <!-- Navbar -->
+  <nav class="navbar sticky" id="nav-header">
+    <div class="container">
+      <a href="index.html" class="logo" id="nav-logo">VHOTELS</a>
+      <ul class="nav-links" id="menu-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="suites.html">Suites</a></li>
+        <li><a href="staff_dashboard.html" class="active"><i class="fas fa-concierge-bell"></i> Staff Portal</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li class="nav-btn"><button onclick="VHotels.logout()" class="btn-gold" style="padding: 8px 18px; font-size: 0.8rem;">Logout</button></li>
+      </ul>
+      <div class="mobile-menu-btn" id="mobile-toggle">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Staff Header Banner -->
+  <header style="background: #111; color: #fff; padding: 50px 20px 30px; border-bottom: 2px solid var(--color-gold);">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      <div>
+        <span class="gold-text" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600;">
+          <i class="fas fa-concierge-bell"></i> VIP Reception & Operations
+        </span>
+        <h1 style="font-family: var(--font-serif); font-size: 2.4rem; margin: 5px 0 0; color: #fff;">Concierge Operations Center</h1>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <a href="/api/staff/reservations/export" class="btn-gold" style="text-decoration: none; padding: 10px 20px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-file-csv"></i> Export Guest CSV Roster
+        </a>
+        <button onclick="document.getElementById('notice-modal').classList.add('active')" class="btn-outline" style="color: #fff; border-color: rgba(255,255,255,0.4); padding: 10px 18px; font-size: 0.85rem;">
+          <i class="fas fa-bullhorn"></i> Post Notice
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Roster Dashboard -->
+  <main class="container section-padding">
+    
+    <!-- Filter Controls Bar -->
+    <div style="background: #ffffff; border-radius: 12px; padding: 25px 30px; box-shadow: var(--shadow-glass); border: 1px solid var(--color-light-gray); margin-bottom: 30px;">
+      <div style="display: grid; grid-template-columns: 2fr 1.2fr 1.2fr auto; gap: 15px; align-items: center;">
+        
+        <!-- Search -->
+        <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 8px;">
+          <i class="fas fa-search" style="color: var(--color-gold); margin-left: 12px;"></i>
+          <input type="text" id="staff-search" placeholder="Search reference, guest name, email, or suite..." style="background: transparent; border: none; padding: 12px; width: 100%; outline: none; font-size: 0.95rem;">
+        </div>
+
+        <!-- Status Filter -->
+        <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 8px;">
+          <select id="staff-filter-status" style="background: transparent; border: none; padding: 12px; width: 100%; outline: none; font-size: 0.9rem; cursor: pointer;">
+            <option value="all">All Reservation Statuses</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="checked_in">Checked In</option>
+            <option value="checked_out">Checked Out</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+
+        <!-- Resort Filter -->
+        <div class="input-wrapper" style="border: 1px solid #ddd; background: #fafafa; border-radius: 8px;">
+          <select id="staff-filter-resort" style="background: transparent; border: none; padding: 12px; width: 100%; outline: none; font-size: 0.9rem; cursor: pointer;">
+            <option value="all">All Resort Locations</option>
+            <option value="Rajasthan">Rajasthan (Udaipur & Jaipur)</option>
+            <option value="Kerala">Kerala (Kumarakom)</option>
+            <option value="Goa">Goa (Candolim)</option>
+            <option value="Kashmir">Kashmir (Gulmarg)</option>
+            <option value="Mumbai">Mumbai (Marine Drive)</option>
+            <option value="Varanasi">Varanasi (Ganga Ghats)</option>
+            <option value="Maldives">Maldives</option>
+            <option value="St. Moritz">St. Moritz</option>
+            <option value="New York">New York</option>
+          </select>
+        </div>
+
+        <div>
+          <button onclick="loadReservations()" class="btn-outline" style="padding: 12px 18px; border-color: #ddd; color: #333; cursor: pointer;">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Reservations Table Box -->
+    <div style="background: #ffffff; border-radius: 16px; padding: 35px; box-shadow: var(--shadow-glass); border: 1px solid var(--color-light-gray);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <div>
+          <h2 style="font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 5px;">Master Guest Roster</h2>
+          <span id="roster-counter" style="color: #777; font-size: 0.9rem;">Loading records...</span>
+        </div>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: #fafafa; border-bottom: 2px solid #eee; color: #555; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+              <th style="padding: 14px 16px;">Booking Ref</th>
+              <th style="padding: 14px 16px;">Guest Information</th>
+              <th style="padding: 14px 16px;">Estate & Suite</th>
+              <th style="padding: 14px 16px;">Dates</th>
+              <th style="padding: 14px 16px;">Total Paid</th>
+              <th style="padding: 14px 16px;">Status</th>
+              <th style="padding: 14px 16px; text-align: right;">Operations</th>
+            </tr>
+          </thead>
+          <tbody id="roster-tbody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <div id="no-roster" style="display: none; text-align: center; padding: 50px 20px;">
+        <i class="fas fa-inbox" style="font-size: 2.5rem; color: #ccc; margin-bottom: 12px;"></i>
+        <h3>No Reservations Found</h3>
+        <p style="color: #777;">No records match your active search or filters.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Post Notice Modal -->
+  <div class="modal-overlay" id="notice-modal">
+    <div class="modal-card" style="background: #ffffff; color: #111; max-width: 520px; border-radius: 12px; padding: 30px;">
+      <div class="modal-header" style="border-bottom: 1px solid #eee; margin-bottom: 20px;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.4rem;"><i class="fas fa-bullhorn" style="color: var(--color-gold);"></i> Broadcast Guest Notice</h2>
+        <button class="modal-close" onclick="document.getElementById('notice-modal').classList.remove('active')">&times;</button>
+      </div>
+      <form id="notice-form">
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 6px;">Notice Title</label>
+          <input type="text" id="notice-title" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; outline: none;">
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 6px;">Category</label>
+          <select id="notice-cat" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; outline: none; background: #fff;">
+            <option value="offer">Exclusive Member Offer</option>
+            <option value="estate_update">Estate Operational Update</option>
+            <option value="culinary">Culinary Event / Banquet</option>
+          </select>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 6px;">Notice Details</label>
+          <textarea id="notice-content" rows="3" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; outline: none; font-family: inherit;"></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" onclick="document.getElementById('notice-modal').classList.remove('active')" class="btn-outline" style="color: #333; border-color: #ccc; padding: 8px 16px;">Cancel</button>
+          <button type="submit" class="btn-gold" style="padding: 8px 18px;">Publish Notice</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="vhotels.js"></script>
+  <script>
+    let allReservations = [];
+
+    async function checkStaffAuth() {
+      try {
+        const res = await fetch('/api/auth/me');
+        const data = await res.json();
+        if (!data.authenticated || (data.user.role !== 'staff' && data.user.role !== 'admin')) {
+          alert('Access restricted to Hotel Staff and Concierge Administrators.');
+          window.location.href = 'login.html';
+          return;
+        }
+        loadReservations();
+      } catch (e) {
+        window.location.href = 'login.html';
+      }
+    }
+
+    async function loadReservations() {
+      try {
+        const res = await fetch('/api/staff/reservations');
+        const data = await res.json();
+        if (data.success) {
+          allReservations = data.reservations;
+          renderRoster();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderRoster() {
+      const q = document.getElementById('staff-search').value.toLowerCase().trim();
+      const status = document.getElementById('staff-filter-status').value;
+      const resort = document.getElementById('staff-filter-resort').value;
+
+      const filtered = allReservations.filter(r => {
+        const guestName = `${r.first_name} ${r.last_name}`.toLowerCase();
+        const matchesQ = !q || r.booking_reference.toLowerCase().includes(q) || guestName.includes(q) || r.email.toLowerCase().includes(q) || r.suite_name.toLowerCase().includes(q);
+        const matchesStatus = status === 'all' || r.status === status;
+        const matchesResort = resort === 'all' || r.resort_location.includes(resort);
+        return matchesQ && matchesStatus && matchesResort;
+      });
+
+      const tbody = document.getElementById('roster-tbody');
+      const counter = document.getElementById('roster-counter');
+      const empty = document.getElementById('no-roster');
+
+      counter.textContent = `Showing ${filtered.length} of ${allReservations.length} total bookings`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = filtered.map(r => {
+        const isCancelled = r.status === 'cancelled';
+        const isCheckedIn = r.status === 'checked_in';
+        const isCheckedOut = r.status === 'checked_out';
+
+        let badgeStyle = 'background: #d4edda; color: #155724;';
+        if (isCancelled) badgeStyle = 'background: #f8d7da; color: #721c24;';
+        if (isCheckedIn) badgeStyle = 'background: #cce5ff; color: #004085;';
+        if (isCheckedOut) badgeStyle = 'background: #e2e3e5; color: #383d41;';
+
+        return `
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 14px 16px; font-weight: 700; color: var(--color-gold);">${r.booking_reference}</td>
+            <td style="padding: 14px 16px;">
+              <div style="font-weight: 600; color: #111;">${r.title || ''} ${r.first_name} ${r.last_name}</div>
+              <div style="font-size: 0.8rem; color: #777;">${r.email} | <i class="fas fa-phone-alt"></i> ${r.mobile}</div>
+            </td>
+            <td style="padding: 14px 16px;">
+              <div style="font-weight: 500;">${r.suite_name}</div>
+              <div style="font-size: 0.8rem; color: #888;">${r.resort_location}</div>
+            </td>
+            <td style="padding: 14px 16px;">
+              <div>${r.check_in_date} &rarr; ${r.check_out_date}</div>
+              <div style="font-size: 0.8rem; color: #777;">${r.num_nights} Night(s) (${r.guests_count} Guests)</div>
+            </td>
+            <td style="padding: 14px 16px; font-weight: 700;">₹${Number(r.total_amount).toLocaleString('en-IN')}</td>
+            <td style="padding: 14px 16px;">
+              <span style="${badgeStyle} padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
+                ${r.status.replace('_', ' ')}
+              </span>
+            </td>
+            <td style="padding: 14px 16px; text-align: right;">
+              ${!isCancelled && !isCheckedOut ? `
+                <select onchange="updateStatus(${r.id}, this.value)" style="padding: 5px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">
+                  <option value="" disabled selected>Update Status...</option>
+                  ${!isCheckedIn ? '<option value="checked_in">Check In Guest</option>' : ''}
+                  <option value="checked_out">Check Out Guest</option>
+                  <option value="cancelled">Cancel Stay</option>
+                </select>
+              ` : '<span style="color: #999; font-size: 0.8rem;">Completed</span>'}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function updateStatus(bookingId, newStatus) {
+      if (!newStatus) return;
+      try {
+        const res = await fetch(`/api/staff/reservations/${bookingId}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        if (data.success) {
+          VHotels.showToast(data.message, 'success');
+          loadReservations();
+        } else {
+          alert(data.message || 'Error updating status.');
+        }
+      } catch (e) {
+        alert('Network error.');
+      }
+    }
+
+    // Notice submission
+    document.getElementById('notice-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('notice-title').value;
+      const category = document.getElementById('notice-cat').value;
+      const content = document.getElementById('notice-content').value;
+
+      try {
+        const res = await fetch('/api/notices', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, category, content })
+        });
+        const data = await res.json();
+        if (data.success) {
+          VHotels.showToast('Broadcast notice published!', 'success');
+          document.getElementById('notice-modal').classList.remove('active');
+          document.getElementById('notice-form').reset();
+        }
+      } catch (err) {
+        alert('Error publishing notice.');
+      }
+    });
+
+    document.getElementById('staff-search').addEventListener('input', renderRoster);
+    document.getElementById('staff-filter-status').addEventListener('change', renderRoster);
+    document.getElementById('staff-filter-resort').addEventListener('change', renderRoster);
+
+    document.addEventListener('DOMContentLoaded', checkStaffAuth);
+  </script>
+</body>
+</html>

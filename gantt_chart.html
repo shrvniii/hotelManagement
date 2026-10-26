@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VHotels HMS - 14-Week Project Gantt Chart</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #c9a227;
+      --primary-dark: #a4801b;
+      --text-main: #2a2520;
+      --text-muted: #6b635b;
+      --bg-main: #fcfbfa;
+      --bg-card: #ffffff;
+      --border-color: #eadecd;
+      
+      /* Phase Colors */
+      --phase-inception: #4a90e2;
+      --phase-design: #8e44ad;
+      --phase-dev: #e67e22;
+      --phase-test: #e74c3c;
+      --phase-deploy: #27ae60;
+      --phase-post: #16a085;
+      --crit-border: #d9534f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      padding: 30px;
+      line-height: 1.5;
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto 25px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 20px;
+    }
+
+    .title-area h1 {
+      font-size: 2rem;
+      color: #111;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .title-area p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .controls-area {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border-color);
+      background: #fff;
+    }
+
+    .btn-gold {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn-gold:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn:hover {
+      background: #f5f5f5;
+    }
+
+    /* Legend */
+    .legend-bar {
+      max-width: 1400px;
+      margin: 0 auto 25px auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      background: var(--bg-card);
+      padding: 15px 20px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+    }
+
+    /* Gantt Table Container */
+    .gantt-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+      overflow-x: auto;
+    }
+
+    table.gantt-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1100px;
+    }
+
+    th, td {
+      border: 1px solid var(--border-color);
+      padding: 10px 12px;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background-color: #f7f4ee;
+      color: #111;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    th.week-header {
+      text-align: center;
+      width: 48px;
+      font-size: 0.78rem;
+    }
+
+    tr:hover {
+      background-color: #faf8f5;
+    }
+
+    .task-id {
+      font-weight: 700;
+      color: var(--primary-dark);
+      width: 50px;
+      text-align: center;
+    }
+
+    .task-name {
+      font-weight: 600;
+      min-width: 250px;
+    }
+
+    .task-pred {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      min-width: 90px;
+      text-align: center;
+    }
+
+    .task-dur {
+      text-align: center;
+      font-weight: 600;
+      width: 75px;
+    }
+
+    /* Gantt Bars */
+    .timeline-cell {
+      padding: 4px 2px;
+      text-align: center;
+      position: relative;
+    }
+
+    .gantt-bar {
+      height: 22px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .gantt-bar:hover {
+      transform: scale(1.05);
+      z-index: 10;
+    }
+
+    .bg-inception { background-color: var(--phase-inception); }
+    .bg-design { background-color: var(--phase-design); }
+    .bg-dev { background-color: var(--phase-dev); }
+    .bg-test { background-color: var(--phase-test); }
+    .bg-deploy { background-color: var(--phase-deploy); }
+    .bg-post { background-color: var(--phase-post); }
+
+    .is-critical {
+      box-shadow: 0 0 0 2px var(--crit-border), 0 2px 5px rgba(217, 83, 79, 0.4);
+    }
+
+    .crit-badge {
+      display: inline-block;
+      background: #fdf0ed;
+      color: #d9534f;
+      border: 1px solid #f5c6cb;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        padding: 10px;
+        background: #fff;
+      }
+      .controls-area {
+        display: none;
+      }
+      .gantt-wrapper {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-container">
+    <div class="title-area">
+      <h1><i class="fas fa-hotel" style="color: var(--primary);"></i> VHotels HMS — 14-Week Project Gantt Chart</h1>
+      <p>Multi-Stream Dependency Timeline with Testing, Deployment & Post-Deployment (1 Week = 7 Days | Total = 98 Days)</p>
+    </div>
+    <div class="controls-area">
+      <button class="btn" onclick="window.print()"><i class="fas fa-print"></i> Print / Save PDF</button>
+      <button class="btn btn-gold" id="toggle-crit"><i class="fas fa-fire"></i> Highlight Critical Path</button>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend-bar">
+    <div class="legend-item"><div class="legend-color" style="background: var(--phase-inception);"></div> 1. Inception & Scope (W1-W2)</div>
+    <div class="legend-item"><div class="legend-color" style="background: var(--phase-design);"></div> 2. Architecture & Design (W3-W4)</div>
+    <div class="legend-item"><div class="legend-color" style="background: var(--phase-dev);"></div> 3. Core Development (W5-W8)</div>
+    <div class="legend-item"><div class="legend-color" style="background: var(--phase-test);"></div> 4. Quality Testing (W9-W11)</div>
+    <div class="legend-item"><div class="legend-color" style="background: var(--phase-deploy);"></div> 5. Cloud Deployment (W12)</div>
+    <div class="legend-item"><div class="legend-color" style="background: var(--phase-post);"></div> 6. Post-Deployment (W13-W14)</div>
+    <div class="legend-item"><span class="crit-badge" style="margin-left:0;"><i class="fas fa-star"></i> Critical Path (0 Float)</span></div>
+  </div>
+
+  <!-- Gantt Table -->
+  <div class="gantt-wrapper">
+    <table class="gantt-table">
+      <thead>
+        <tr>
+          <th class="task-id">ID</th>
+          <th class="task-name">Activity Description</th>
+          <th class="task-pred">Predecessor</th>
+          <th class="task-dur">Duration</th>
+          <th class="week-header">W1</th>
+          <th class="week-header">W2</th>
+          <th class="week-header">W3</th>
+          <th class="week-header">W4</th>
+          <th class="week-header">W5</th>
+          <th class="week-header">W6</th>
+          <th class="week-header">W7</th>
+          <th class="week-header">W8</th>
+          <th class="week-header">W9</th>
+          <th class="week-header">W10</th>
+          <th class="week-header">W11</th>
+          <th class="week-header">W12</th>
+          <th class="week-header">W13</th>
+          <th class="week-header">W14</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Phase 1 -->
+        <tr>
+          <td class="task-id">A1</td>
+          <td class="task-name">Project Scope & Feasibility <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">—</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td class="timeline-cell"><div class="gantt-bar bg-inception is-critical" title="A1: Week 1">A1</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A2</td>
+          <td class="task-name">Requirement Analysis & SRS <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A1</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-inception is-critical" title="A2: Week 2">A2</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+
+        <!-- Phase 2 -->
+        <tr>
+          <td class="task-id">A3</td>
+          <td class="task-name">System Architecture & HLD <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A2</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-design is-critical" title="A3: Week 3">A3</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A4</td>
+          <td class="task-name">Master Test Strategy & QA Plan</td>
+          <td class="task-pred">A2</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-design" title="A4: Week 3 (Parallel track)">A4</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A5</td>
+          <td class="task-name">Database Schema & ERD (LLD) <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A3</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-design is-critical" title="A5: Week 4">A5</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A6</td>
+          <td class="task-name">UI/UX Wireframes & Design System</td>
+          <td class="task-pred">A3</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-design" title="A6: Week 4 (Parallel track)">A6</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+
+        <!-- Phase 3 -->
+        <tr>
+          <td class="task-id">A7</td>
+          <td class="task-name">Auth & RBAC Module (Merge A5+A6) <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A5, A6</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-dev is-critical" title="A7: Week 5">A7</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A8</td>
+          <td class="task-name">Room Catalog & Search Engine <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A7</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-dev is-critical" title="A8: Week 6">A8</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A9</td>
+          <td class="task-name">Booking Engine Core <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A8</td>
+          <td class="task-dur">2 Wks (14d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell" colspan="2"><div class="gantt-bar bg-dev is-critical" style="width: 100%;" title="A9: Weeks 7-8">A9: Booking Core (2 Wks)</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A10</td>
+          <td class="task-name">Simulated Payment Integration</td>
+          <td class="task-pred">A8</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-dev" title="A10: Week 7 (Parallel track)">A10</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A11</td>
+          <td class="task-name">Staff Front-Desk Module</td>
+          <td class="task-pred">A8</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-dev" title="A11: Week 7 (Parallel track)">A11</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A12</td>
+          <td class="task-name">Review & Ratings Module</td>
+          <td class="task-pred">A8</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-dev" title="A12: Week 8 (Parallel track)">A12</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A13</td>
+          <td class="task-name">Admin Dashboard (Merge A9+A10+A11) <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A9, A10, A11</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-dev is-critical" title="A13: Week 8">A13</div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+
+        <!-- Phase 4 -->
+        <tr>
+          <td class="task-id">A14</td>
+          <td class="task-name">Unit & Component Testing (Merge) <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A4, A12, A13</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-test is-critical" title="A14: Week 9">A14</div></td>
+          <td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A15</td>
+          <td class="task-name">Integration, Security & Load Testing <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A14</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-test is-critical" title="A15: Week 10">A15</div></td>
+          <td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A16</td>
+          <td class="task-name">User Acceptance Testing (UAT) <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A15</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-test is-critical" title="A16: Week 11">A16</div></td>
+          <td></td><td></td><td></td>
+        </tr>
+
+        <!-- Phase 5 -->
+        <tr>
+          <td class="task-id">A17</td>
+          <td class="task-name">Cloud Staging & Production Go-Live <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A16</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-deploy is-critical" title="A17: Week 12">A17</div></td>
+          <td></td><td></td>
+        </tr>
+
+        <!-- Phase 6 -->
+        <tr>
+          <td class="task-id">A18</td>
+          <td class="task-name">Post-Deployment Monitoring & Patching <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A17</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-post is-critical" title="A18: Week 13">A18</div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A19</td>
+          <td class="task-name">Staff Training & User Feedback</td>
+          <td class="task-pred">A17</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-post" title="A19: Week 13 (Parallel track)">A19</div></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="task-id">A20</td>
+          <td class="task-name">Final Report, User Manual & Viva <span class="crit-badge">Critical</span></td>
+          <td class="task-pred">A18, A19</td>
+          <td class="task-dur">1 Wk (7d)</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="timeline-cell"><div class="gantt-bar bg-post is-critical" title="A20: Week 14">A20</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('toggle-crit');
+    let highlighted = false;
+    toggleBtn.addEventListener('click', () => {
+      highlighted = !highlighted;
+      document.querySelectorAll('.gantt-bar:not(.is-critical)').forEach(el => {
+        el.style.opacity = highlighted ? '0.25' : '1';
+      });
+      toggleBtn.innerHTML = highlighted 
+        ? '<i class="fas fa-eye"></i> Show All Normal' 
+        : '<i class="fas fa-fire"></i> Highlight Critical Path';
+    });
+  </script>
+</body>
+</html>

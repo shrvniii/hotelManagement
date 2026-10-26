@@ -16,7 +16,7 @@
       
       <ul class="nav-links" id="menu-links">
         <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="#featured-hotels">Hotels</a></li>
+        <li><a href="suites.html">Suites</a></li>
         <li><a href="#dining-experience">Dining</a></li>
         <li><a href="#why-choose-us">Services</a></li>
         <li><a href="register.html">Register</a></li>
@@ -39,7 +39,7 @@
       <span class="tagline">A Sanctuary of Elegance</span>
       <h1 class="gold-text">Experience Timeless Luxury</h1>
       <p>Where grand heritage meets modern refinement, crafting memories that linger forever.</p>
-      <a href="#featured-hotels" class="btn-outline">Explore Estates</a>
+      <a href="suites.html" class="btn-outline">Explore Estates</a>
     </div>
     
     <div class="scroll-down" onclick="document.getElementById('booking-search').scrollIntoView();">
@@ -55,10 +55,15 @@
         <div class="input-wrapper">
           <i class="fas fa-map-marker-alt"></i>
           <select id="destination" required>
-            <option value="" disabled selected>Select property...</option>
-            <option value="Palace, Rajasthan">VHotels Palace (Rajasthan)</option>
-            <option value="Riviera, Maldives">VHotels Riviera (Maldives)</option>
-            <option value="Alpine Lodge, St. Moritz">VHotels Alpine Lodge (St. Moritz)</option>
+            <option value="" disabled selected>Select destination...</option>
+            <option value="Rajasthan">VHotels Palace (Rajasthan)</option>
+            <option value="Kerala">VHotels Backwaters (Kerala)</option>
+            <option value="Goa">VHotels Coastal (Goa)</option>
+            <option value="Kashmir">VHotels Himalayan (Kashmir)</option>
+            <option value="Mumbai">VHotels Bay (Mumbai)</option>
+            <option value="Varanasi">VHotels Heritage (Varanasi)</option>
+            <option value="Maldives">VHotels Riviera (Maldives)</option>
+            <option value="St. Moritz">VHotels Alpine Lodge (St. Moritz)</option>
           </select>
         </div>
         <span class="error-msg" id="destination-error"></span>
@@ -107,7 +112,7 @@
     </div>
     
     <div class="hotels-grid">
-      <!-- Hotel 1 -->
+      <!-- Hotel 1: Rajasthan -->
       <div class="hotel-card" id="card-palace">
         <div class="hotel-img-wrapper">
           <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800" alt="VHotels Palace Heritage Suite">
@@ -115,81 +120,144 @@
         </div>
         <div class="hotel-info">
           <div class="hotel-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
             <span style="color: rgba(255,255,255,0.6); margin-left: 5px;">(5.0 / 340 Reviews)</span>
           </div>
           <div class="hotel-title">
             <h3>VHotels Palace</h3>
-            <span style="font-size: 0.8rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-top: -5px; margin-bottom: 15px;">Rajasthan, India</span>
+            <span style="font-size: 0.8rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-top: -5px; margin-bottom: 15px;">Udaipur, Rajasthan</span>
           </div>
           <p class="hotel-desc">A magnificent 19th-century royal fortress restored into a breathtaking sanctuary, reflecting the grand royal heritage of Mewar.</p>
           <div class="hotel-footer">
             <div class="hotel-price">
               From <span>₹55,000 / night</span>
             </div>
-            <a href="login.html" class="hotel-link">Book Suite <i class="fas fa-arrow-right"></i></a>
+            <a href="booking.html?suite_id=1" class="hotel-link">Book Suite <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
       </div>
 
-      <!-- Hotel 2 -->
-      <div class="hotel-card" id="card-riviera">
+      <!-- Hotel 2: Kerala Backwaters -->
+      <div class="hotel-card" id="card-kerala">
         <div class="hotel-img-wrapper">
-          <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=800" alt="VHotels Riviera Maldives">
+          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=800" alt="VHotels Backwaters Kerala Houseboat">
           <span class="hotel-badge">Exclusive</span>
         </div>
         <div class="hotel-info">
           <div class="hotel-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <span style="color: rgba(255,255,255,0.6); margin-left: 5px;">(4.9 / 280 Reviews)</span>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <span style="color: rgba(255,255,255,0.6); margin-left: 5px;">(4.9 / 265 Reviews)</span>
           </div>
           <div class="hotel-title">
-            <h3>VHotels Riviera</h3>
-            <span style="font-size: 0.8rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-top: -5px; margin-bottom: 15px;">Maldives</span>
+            <h3>VHotels Backwaters</h3>
+            <span style="font-size: 0.8rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-top: -5px; margin-bottom: 15px;">Kumarakom, Kerala</span>
           </div>
-          <p class="hotel-desc">Intimate, private overwater villas floating atop crystal-clear turquoise waters. Experience ultimate seclusion in an island paradise.</p>
+          <p class="hotel-desc">Hand-crafted luxury teakwood presidential cruiser gliding through tranquil palm-fringed backwaters with private Ayurvedic chef.</p>
           <div class="hotel-footer">
             <div class="hotel-price">
-              From <span>₹95,000 / night</span>
+              From <span>₹48,000 / night</span>
             </div>
-            <a href="login.html" class="hotel-link">Book Suite <i class="fas fa-arrow-right"></i></a>
+            <a href="booking.html?suite_id=3" class="hotel-link">Book Suite <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
       </div>
 
-      <!-- Hotel 3 -->
-      <div class="hotel-card" id="card-alpine">
+      <!-- Hotel 3: Goa Coastal Villa -->
+      <div class="hotel-card" id="card-goa">
         <div class="hotel-img-wrapper">
-          <img src="https://images.unsplash.com/photo-1502784444187-359ac186c5bb?q=80&w=800" alt="VHotels Alpine Lodge St. Moritz">
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800" alt="VHotels Coastal Goa Villa">
+          <span class="hotel-badge">Exclusive</span>
+        </div>
+        <div class="hotel-info">
+          <div class="hotel-rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <span style="color: rgba(255,255,255,0.6); margin-left: 5px;">(4.9 / 312 Reviews)</span>
+          </div>
+          <div class="hotel-title">
+            <h3>VHotels Coastal</h3>
+            <span style="font-size: 0.8rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-top: -5px; margin-bottom: 15px;">Candolim, Goa</span>
+          </div>
+          <p class="hotel-desc">Portuguese-colonial luxury villa directly on private sands with personal lap pool, beach cabana, and sunset barbecue butler service.</p>
+          <div class="hotel-footer">
+            <div class="hotel-price">
+              From <span>₹62,000 / night</span>
+            </div>
+            <a href="booking.html?suite_id=4" class="hotel-link">Book Suite <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hotel 4: Mumbai Marine Drive -->
+      <div class="hotel-card" id="card-mumbai">
+        <div class="hotel-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=800" alt="VHotels Bay Mumbai Penthouse">
+          <span class="hotel-badge">Presidential</span>
+        </div>
+        <div class="hotel-info">
+          <div class="hotel-rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <span style="color: rgba(255,255,255,0.6); margin-left: 5px;">(5.0 / 118 Reviews)</span>
+          </div>
+          <div class="hotel-title">
+            <h3>VHotels Bay</h3>
+            <span style="font-size: 0.8rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-top: -5px; margin-bottom: 15px;">Marine Drive, Mumbai</span>
+          </div>
+          <p class="hotel-desc">Panoramic vistas of the Queen's Necklace from the 45th floor, featuring infinity plunge pool and Rolls-Royce chauffeur transfers.</p>
+          <div class="hotel-footer">
+            <div class="hotel-price">
+              From <span>₹1,25,000 / night</span>
+            </div>
+            <a href="booking.html?suite_id=6" class="hotel-link">Book Suite <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hotel 5: Kashmir Gulmarg -->
+      <div class="hotel-card" id="card-kashmir">
+        <div class="hotel-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1502784444187-359ac186c5bb?q=80&w=800" alt="VHotels Himalayan Pine Chalet">
           <span class="hotel-badge">Chalet</span>
         </div>
         <div class="hotel-info">
           <div class="hotel-rating">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
             <span style="color: rgba(255,255,255,0.6); margin-left: 5px;">(4.9 / 195 Reviews)</span>
           </div>
           <div class="hotel-title">
-            <h3>VHotels Alpine Lodge</h3>
-            <span style="font-size: 0.8rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-top: -5px; margin-bottom: 15px;">St. Moritz, Switzerland</span>
+            <h3>VHotels Himalayan</h3>
+            <span style="font-size: 0.8rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-top: -5px; margin-bottom: 15px;">Gulmarg, Kashmir</span>
           </div>
-          <p class="hotel-desc">Tucked in the pristine snowcapped peaks of the Swiss Alps, offering cozy fireplaces, panoramic views, and direct ski-in ski-out access.</p>
+          <p class="hotel-desc">Perched amidst snow-covered pine ridges with traditional Bukhari fireplaces, heated mountain spa, and ski-in ski-out gondola access.</p>
           <div class="hotel-footer">
             <div class="hotel-price">
-              From <span>₹75,000 / night</span>
+              From <span>₹72,000 / night</span>
             </div>
-            <a href="login.html" class="hotel-link">Book Suite <i class="fas fa-arrow-right"></i></a>
+            <a href="booking.html?suite_id=5" class="hotel-link">Book Suite <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hotel 6: Varanasi Ganga Haveli -->
+      <div class="hotel-card" id="card-varanasi">
+        <div class="hotel-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=800" alt="VHotels Heritage Ganga Haveli">
+          <span class="hotel-badge">Heritage</span>
+        </div>
+        <div class="hotel-info">
+          <div class="hotel-rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <span style="color: rgba(255,255,255,0.6); margin-left: 5px;">(4.8 / 176 Reviews)</span>
+          </div>
+          <div class="hotel-title">
+            <h3>VHotels Heritage</h3>
+            <span style="font-size: 0.8rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-top: -5px; margin-bottom: 15px;">Ghats of Varanasi</span>
+          </div>
+          <p class="hotel-desc">An exquisitely restored 18th-century stone mansion overlooking Dashashwamedh Ghat with private sunrise boat tours and rooftop Aarti vistas.</p>
+          <div class="hotel-footer">
+            <div class="hotel-price">
+              From <span>₹42,000 / night</span>
+            </div>
+            <a href="booking.html?suite_id=7" class="hotel-link">Book Suite <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
       </div>
@@ -295,20 +363,20 @@
         <!-- Testimonial 1 -->
         <div class="testimonial-slide active" id="slide-1">
           <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
-          <p class="testimonial-text">"Our stay at VHotels Palace was nothing short of magical. The attention to detail, grand architecture, and bespoke butler service made us feel like royalty. A masterclass in software engineering and design experience!"</p>
-          <span class="testimonial-author">Lady Victoria Sterling | London</span>
+          <p class="testimonial-text">"Our stay at VHotels Palace Udaipur was nothing short of magical. The attention to detail, grand Mewar architecture, and bespoke butler service made our anniversary feel truly royal. Outstanding hospitality!"</p>
+          <span class="testimonial-author">Sunita Agarwal | New Delhi</span>
         </div>
         <!-- Testimonial 2 -->
         <div class="testimonial-slide" id="slide-2">
           <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
-          <p class="testimonial-text">"A perfect oasis of tranquility. VHotels Riviera floating villas offer a perspective of the ocean that is unrivaled. Simply the best hospitality concept of the century."</p>
-          <span class="testimonial-author">Marcus Aurelius | Zurich</span>
+          <p class="testimonial-text">"The luxury Vembanad houseboat in Kerala was a peaceful dream. Gliding through tranquil backwaters with a private Ayurvedic chef was the most rejuvenating vacation our family has had."</p>
+          <span class="testimonial-author">Dr. Vikram Malhotra | Mumbai</span>
         </div>
         <!-- Testimonial 3 -->
         <div class="testimonial-slide" id="slide-3">
           <div class="quote-icon"><i class="fas fa-quote-right"></i></div>
-          <p class="testimonial-text">"Exquisite fine dining, exceptional powder skiing, and the absolute warmest luxury hospitality in the Swiss Alps. A flawless, premium retreat."</p>
-          <span class="testimonial-author">Elena Rostova | Monaco</span>
+          <p class="testimonial-text">"VHotels Coastal Villa in Goa provided total privacy, world-class dining, and direct beach access. The 24/7 concierge took care of every request seamlessly."</p>
+          <span class="testimonial-author">Ananya Deshmukh | Bengaluru</span>
         </div>
       </div>
       
@@ -356,7 +424,7 @@
         <h4>Navigation</h4>
         <ul class="footer-links">
           <li><a href="#hero-banner">Home Page</a></li>
-          <li><a href="#featured-hotels">Featured Estates</a></li>
+          <li><a href="suites.html">Featured Estates</a></li>
           <li><a href="#dining-experience">Dining Options</a></li>
           <li><a href="#why-choose-us">Services Suite</a></li>
           <li><a href="login.html">Member Access</a></li>
@@ -366,10 +434,11 @@
       <div class="footer-col" id="footer-links-estates">
         <h4>The Estates</h4>
         <ul class="footer-links">
-          <li><a href="#featured-hotels">VHotels Palace</a></li>
-          <li><a href="#featured-hotels">VHotels Riviera</a></li>
-          <li><a href="#featured-hotels">VHotels Alpine Lodge</a></li>
-          <li><a href="#">VHotels Heights (NYC)</a></li>
+          <li><a href="suites.html?location=Rajasthan">VHotels Palace (Rajasthan)</a></li>
+          <li><a href="suites.html?location=Kerala">VHotels Backwaters (Kerala)</a></li>
+          <li><a href="suites.html?location=Goa">VHotels Coastal (Goa)</a></li>
+          <li><a href="suites.html?location=Kashmir">VHotels Himalayan (Kashmir)</a></li>
+          <li><a href="suites.html?location=Mumbai">VHotels Bay (Mumbai)</a></li>
         </ul>
       </div>
 
@@ -378,15 +447,15 @@
         <div class="footer-contact-info">
           <div>
             <i class="fas fa-map-marker-alt"></i>
-            <span>01 Grand Boulevard, Elite Sector, Rajasthan 313001</span>
+            <span>01 Lake Palace Road, Udaipur, Rajasthan 313001</span>
           </div>
           <div>
             <i class="fas fa-phone-alt"></i>
-            <span>+1 (800) 900-VHOTELS</span>
+            <span>+91 (022) 6890-VHOTEL</span>
           </div>
           <div>
             <i class="fas fa-envelope"></i>
-            <span>concierge@vhotels.com</span>
+            <span>concierge@vhotels.in</span>
           </div>
         </div>
       </div>
@@ -402,5 +471,6 @@
   </footer>
 
   <script src="script.js"></script>
+  <script src="vhotels.js"></script>
 </body>
 </html>
