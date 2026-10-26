@@ -87,12 +87,15 @@
     </div>
 
     <!-- Navigation Tabs for Admin Sections -->
-    <div style="display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 12px;">
+    <div style="display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 12px; flex-wrap: wrap;">
       <button id="tab-btn-users" onclick="switchAdminTab('users')" style="background: none; border: none; font-size: 1rem; font-weight: 600; color: var(--color-gold); cursor: pointer; padding: 5px 10px; border-bottom: 3px solid var(--color-gold); margin-bottom: -15px;">
-        <i class="fas fa-user-shield"></i> User & Security Management
+        <i class="fas fa-user-shield"></i> User & Staff Management
       </button>
       <button id="tab-btn-suites" onclick="switchAdminTab('suites')" style="background: none; border: none; font-size: 1rem; font-weight: 600; color: #777; cursor: pointer; padding: 5px 10px;">
-        <i class="fas fa-hotel"></i> Suite Inventory & Status
+        <i class="fas fa-hotel"></i> Suite Catalog & Pricing
+      </button>
+      <button id="tab-btn-bookings" onclick="switchAdminTab('bookings')" style="background: none; border: none; font-size: 1rem; font-weight: 600; color: #777; cursor: pointer; padding: 5px 10px;">
+        <i class="fas fa-calendar-alt"></i> Master Reservations & Override
       </button>
     </div>
 
@@ -103,14 +106,17 @@
           <h2 style="font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 5px;">Registered Accounts & Roles</h2>
           <span id="user-counter" style="color: #777; font-size: 0.9rem;">Loading accounts...</span>
         </div>
-        <div style="display: flex; gap: 10px;">
-          <input type="text" id="admin-user-search" placeholder="Search name, email, or role..." style="padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; outline: none; width: 260px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <input type="text" id="admin-user-search" placeholder="Search name, email, or role..." style="padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; outline: none; width: 240px;">
           <select id="admin-user-filter-role" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; outline: none; background: #fff;">
             <option value="all">All Roles</option>
             <option value="guest">Guests</option>
             <option value="staff">Staff</option>
             <option value="admin">Administrators</option>
           </select>
+          <button onclick="document.getElementById('modal-add-staff').classList.add('active')" class="btn-gold" style="padding: 10px 16px; font-size: 0.85rem; cursor: pointer;">
+            <i class="fas fa-user-plus"></i> Add Staff Member
+          </button>
         </div>
       </div>
 
@@ -136,9 +142,14 @@
 
     <!-- Tab 2: Suite Inventory Status -->
     <div id="tab-suites-content" style="display: none; background: #ffffff; border-radius: 16px; padding: 35px; box-shadow: var(--shadow-glass); border: 1px solid var(--color-light-gray);">
-      <div style="margin-bottom: 25px;">
-        <h2 style="font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 5px;">Estate Inventory Overview</h2>
-        <span style="color: #777; font-size: 0.9rem;">Real-time inventory levels, pricing, and room allocations.</span>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+        <div>
+          <h2 style="font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 5px;">Estate Inventory Overview</h2>
+          <span style="color: #777; font-size: 0.9rem;">Add, edit pricing, change room stock, or decommission suites.</span>
+        </div>
+        <button onclick="document.getElementById('modal-add-suite').classList.add('active')" class="btn-gold" style="padding: 10px 18px; font-size: 0.85rem; cursor: pointer;">
+          <i class="fas fa-plus-circle"></i> Add New Suite / Estate
+        </button>
       </div>
 
       <div style="overflow-x: auto;">
@@ -151,7 +162,9 @@
               <th style="padding: 14px 16px;">Type</th>
               <th style="padding: 14px 16px;">Rate / Night</th>
               <th style="padding: 14px 16px;">Max Guests</th>
-              <th style="padding: 14px 16px;">Inventory Status</th>
+              <th style="padding: 14px 16px;">Rooms Available</th>
+              <th style="padding: 14px 16px;">Status</th>
+              <th style="padding: 14px 16px; text-align: right;">Actions</th>
             </tr>
           </thead>
           <tbody id="inventory-tbody">
@@ -161,12 +174,205 @@
       </div>
     </div>
 
+    <!-- Tab 3: Master Bookings & Cancel Override -->
+    <div id="tab-bookings-content" style="display: none; background: #ffffff; border-radius: 16px; padding: 35px; box-shadow: var(--shadow-glass); border: 1px solid var(--color-light-gray);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <div>
+          <h2 style="font-family: var(--font-serif); font-size: 1.6rem; margin: 0 0 5px;">All System Reservations</h2>
+          <span id="admin-bookings-counter" style="color: #777; font-size: 0.9rem;">Master guest bookings ledger.</span>
+        </div>
+        <button onclick="loadAdminBookings()" class="btn-outline" style="padding: 8px 16px; font-size: 0.85rem; color: #333; border-color: #ddd;">
+          <i class="fas fa-sync-alt"></i> Refresh Ledger
+        </button>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: #fafafa; border-bottom: 2px solid #eee; color: #555; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;">
+              <th style="padding: 14px 16px;">Ref No.</th>
+              <th style="padding: 14px 16px;">Guest Name</th>
+              <th style="padding: 14px 16px;">Suite & Estate</th>
+              <th style="padding: 14px 16px;">Stay Dates</th>
+              <th style="padding: 14px 16px;">Total Amount</th>
+              <th style="padding: 14px 16px;">Status</th>
+              <th style="padding: 14px 16px; text-align: right;">Admin Action</th>
+            </tr>
+          </thead>
+          <tbody id="admin-bookings-tbody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </main>
+
+  <!-- Modal 1: Add New Staff Member -->
+  <div class="modal-overlay" id="modal-add-staff">
+    <div class="modal-card" style="background: #ffffff; color: #111; max-width: 540px; border-radius: 12px; padding: 30px;">
+      <div class="modal-header" style="border-bottom: 1px solid #eee; margin-bottom: 20px;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.4rem;"><i class="fas fa-user-plus" style="color: var(--color-gold);"></i> Provision Staff Account</h2>
+        <button class="modal-close" onclick="document.getElementById('modal-add-staff').classList.remove('active')">&times;</button>
+      </div>
+      <form id="form-add-staff">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">First Name</label>
+            <input type="text" id="staff-fn" required style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Last Name</label>
+            <input type="text" id="staff-ln" required style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Official Email</label>
+          <input type="email" id="staff-em" required style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Temporary Password</label>
+            <input type="password" id="staff-pw" value="Staff@123" required style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Mobile (10 Digits)</label>
+            <input type="tel" id="staff-mo" maxlength="10" required style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Account Role</label>
+            <select id="staff-ro" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; background: #fff;">
+              <option value="staff" selected>Concierge Staff</option>
+              <option value="admin">Administrator</option>
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Assigned Property</label>
+            <input type="text" id="staff-re" value="VHotels Coastal (Goa)" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" onclick="document.getElementById('modal-add-staff').classList.remove('active')" class="btn-outline" style="color: #444; border-color: #ccc; padding: 8px 16px;">Cancel</button>
+          <button type="submit" class="btn-gold" style="padding: 8px 18px;">Create Staff</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Add New Suite / Estate -->
+  <div class="modal-overlay" id="modal-add-suite">
+    <div class="modal-card" style="background: #ffffff; color: #111; max-width: 620px; border-radius: 12px; padding: 30px;">
+      <div class="modal-header" style="border-bottom: 1px solid #eee; margin-bottom: 20px;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.4rem;"><i class="fas fa-plus-circle" style="color: var(--color-gold);"></i> Add New Suite / Estate Property</h2>
+        <button class="modal-close" onclick="document.getElementById('modal-add-suite').classList.remove('active')">&times;</button>
+      </div>
+      <form id="form-add-suite">
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Suite Code</label>
+            <input type="text" id="ns-code" placeholder="e.g. JAIPUR-01" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Suite Title</label>
+            <input type="text" id="ns-name" placeholder="e.g. VHotels Amber Fort Suite" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Resort Location</label>
+            <input type="text" id="ns-loc" placeholder="e.g. Jaipur, Rajasthan" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Suite Category</label>
+            <select id="ns-type" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; background: #fff;">
+              <option value="Heritage">Heritage</option>
+              <option value="Exclusive" selected>Exclusive</option>
+              <option value="Presidential">Presidential</option>
+              <option value="Chalet">Chalet</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Price (₹ / night)</label>
+            <input type="number" id="ns-price" value="50000" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Max Guests</label>
+            <input type="number" id="ns-cap" value="2" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Total Rooms</label>
+            <input type="number" id="ns-rooms" value="4" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Image URL</label>
+          <input type="url" id="ns-img" value="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Description</label>
+          <textarea id="ns-desc" rows="2" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit;"></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" onclick="document.getElementById('modal-add-suite').classList.remove('active')" class="btn-outline" style="color: #444; border-color: #ccc; padding: 8px 16px;">Cancel</button>
+          <button type="submit" class="btn-gold" style="padding: 8px 18px;">Save Suite</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Edit Suite Pricing & Stock -->
+  <div class="modal-overlay" id="modal-edit-suite">
+    <div class="modal-card" style="background: #ffffff; color: #111; max-width: 520px; border-radius: 12px; padding: 30px;">
+      <div class="modal-header" style="border-bottom: 1px solid #eee; margin-bottom: 20px;">
+        <h2 style="font-family: var(--font-serif); font-size: 1.4rem;"><i class="fas fa-edit" style="color: var(--color-gold);"></i> Edit Suite Pricing & Stock</h2>
+        <button class="modal-close" onclick="document.getElementById('modal-edit-suite').classList.remove('active')">&times;</button>
+      </div>
+      <form id="form-edit-suite">
+        <input type="hidden" id="es-id">
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Suite Name</label>
+          <input type="text" id="es-name" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Price (₹ / Night)</label>
+            <input type="number" id="es-price" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Operational Status</label>
+            <select id="es-status" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; background: #fff;">
+              <option value="available">Available for Booking</option>
+              <option value="maintenance">Maintenance / Closed</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Total Rooms</label>
+            <input type="number" id="es-total" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 4px;">Available Rooms</label>
+            <input type="number" id="es-avail" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" onclick="document.getElementById('modal-edit-suite').classList.remove('active')" class="btn-outline" style="color: #444; border-color: #ccc; padding: 8px 16px;">Cancel</button>
+          <button type="submit" class="btn-gold" style="padding: 8px 18px;">Update Suite</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="vhotels.js"></script>
   <script>
     let adminUsersList = [];
+    let adminSuitesList = [];
     let currentAdminUser = null;
 
     async function checkAdminAuth() {
@@ -182,6 +388,7 @@
         loadAdminStats();
         loadAdminUsers();
         loadInventory();
+        loadAdminBookings();
       } catch (e) {
         window.location.href = 'login.html';
       }
@@ -283,11 +490,45 @@
       }
     }
 
+    // Modal Add Staff Handler
+    document.getElementById('form-add-staff').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fn = document.getElementById('staff-fn').value.trim();
+      const ln = document.getElementById('staff-ln').value.trim();
+      const em = document.getElementById('staff-em').value.trim();
+      const pw = document.getElementById('staff-pw').value;
+      const mo = document.getElementById('staff-mo').value.trim();
+      const ro = document.getElementById('staff-ro').value;
+      const re = document.getElementById('staff-re').value.trim();
+
+      try {
+        const res = await fetch('/api/admin/users/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            first_name: fn, last_name: ln, email: em, password: pw, mobile: mo, role: ro, preferred_resort: re, address: 'Hotel Operations'
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          VHotels.showToast(data.message, 'success');
+          document.getElementById('modal-add-staff').classList.remove('active');
+          document.getElementById('form-add-staff').reset();
+          loadAdminUsers();
+        } else {
+          alert(data.message || 'Error creating account.');
+        }
+      } catch (err) {
+        alert('Network error.');
+      }
+    });
+
     async function loadInventory() {
       try {
         const res = await fetch('/api/suites');
         const data = await res.json();
         if (data.success) {
+          adminSuitesList = data.suites;
           const tbody = document.getElementById('inventory-tbody');
           tbody.innerHTML = data.suites.map(s => `
             <tr style="border-bottom: 1px solid #eee;">
@@ -302,6 +543,19 @@
                   ${s.available_rooms} of ${s.total_rooms} available
                 </span>
               </td>
+              <td style="padding: 14px 16px;">
+                <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: ${s.status === 'available' ? '#27ae60' : '#e67e22'};">
+                  ${s.status}
+                </span>
+              </td>
+              <td style="padding: 14px 16px; text-align: right; white-space: nowrap;">
+                <button onclick="openEditSuite(${s.id})" class="btn-outline" style="padding: 5px 10px; font-size: 0.75rem; color: #333; border-color: #ccc; margin-right: 5px; cursor: pointer;">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+                <button onclick="deleteSuite(${s.id})" class="btn-outline" style="padding: 5px 10px; font-size: 0.75rem; color: #c0392b; border-color: #f5c6cb; cursor: pointer;">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
             </tr>
           `).join('');
         }
@@ -310,30 +564,203 @@
       }
     }
 
+    // Modal Add Suite Handler
+    document.getElementById('form-add-suite').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = document.getElementById('ns-code').value.trim();
+      const name = document.getElementById('ns-name').value.trim();
+      const loc = document.getElementById('ns-loc').value.trim();
+      const type = document.getElementById('ns-type').value;
+      const price = document.getElementById('ns-price').value;
+      const cap = document.getElementById('ns-cap').value;
+      const rooms = document.getElementById('ns-rooms').value;
+      const img = document.getElementById('ns-img').value.trim();
+      const desc = document.getElementById('ns-desc').value.trim();
+
+      try {
+        const res = await fetch('/api/admin/suites', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            code, name, resort_location: loc, suite_type: type, price_per_night: price, capacity_guests: cap, total_rooms: rooms, image_url: img, description: desc
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          VHotels.showToast(data.message, 'success');
+          document.getElementById('modal-add-suite').classList.remove('active');
+          document.getElementById('form-add-suite').reset();
+          loadInventory();
+          loadAdminStats();
+        } else {
+          alert(data.message || 'Error adding suite.');
+        }
+      } catch (err) {
+        alert('Network error.');
+      }
+    });
+
+    function openEditSuite(suiteId) {
+      const s = adminSuitesList.find(item => item.id === suiteId);
+      if (!s) return;
+      document.getElementById('es-id').value = s.id;
+      document.getElementById('es-name').value = s.name;
+      document.getElementById('es-price').value = s.price_per_night;
+      document.getElementById('es-total').value = s.total_rooms;
+      document.getElementById('es-avail').value = s.available_rooms;
+      document.getElementById('es-status').value = s.status || 'available';
+      document.getElementById('modal-edit-suite').classList.add('active');
+    }
+
+    document.getElementById('form-edit-suite').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('es-id').value;
+      const s = adminSuitesList.find(item => item.id == id);
+      if (!s) return;
+
+      const name = document.getElementById('es-name').value.trim();
+      const price = document.getElementById('es-price').value;
+      const total = document.getElementById('es-total').value;
+      const avail = document.getElementById('es-avail').value;
+      const status = document.getElementById('es-status').value;
+
+      try {
+        const res = await fetch(`/api/admin/suites/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name, resort_location: s.resort_location, suite_type: s.suite_type,
+            price_per_night: price, capacity_guests: s.capacity_guests,
+            total_rooms: total, available_rooms: avail, status
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          VHotels.showToast(data.message, 'success');
+          document.getElementById('modal-edit-suite').classList.remove('active');
+          loadInventory();
+          loadAdminStats();
+        } else {
+          alert(data.message || 'Update failed.');
+        }
+      } catch (err) {
+        alert('Network error.');
+      }
+    });
+
+    async function deleteSuite(suiteId) {
+      if (!confirm('Are you sure you want to delete/decommission this suite property?')) return;
+      try {
+        const res = await fetch(`/api/admin/suites/${suiteId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          VHotels.showToast(data.message, 'info');
+          loadInventory();
+          loadAdminStats();
+        } else {
+          alert(data.message);
+        }
+      } catch (err) {
+        alert('Network error.');
+      }
+    }
+
+    // Tab 3: Load All System Reservations
+    async function loadAdminBookings() {
+      try {
+        const res = await fetch('/api/staff/reservations');
+        const data = await res.json();
+        if (data.success) {
+          const tbody = document.getElementById('admin-bookings-tbody');
+          document.getElementById('admin-bookings-counter').textContent = `Tracking ${data.reservations.length} total bookings across properties`;
+          tbody.innerHTML = data.reservations.map(b => {
+            const isCancelled = b.status === 'cancelled';
+            return `
+              <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 14px 16px; font-weight: 700; color: var(--color-gold);">${b.booking_reference}</td>
+                <td style="padding: 14px 16px;">
+                  <div style="font-weight: 600;">${b.title || ''} ${b.first_name} ${b.last_name}</div>
+                  <div style="font-size: 0.8rem; color: #777;">${b.email}</div>
+                </td>
+                <td style="padding: 14px 16px;">
+                  <div style="font-weight: 500;">${b.suite_name}</div>
+                  <div style="font-size: 0.8rem; color: #888;">${b.resort_location}</div>
+                </td>
+                <td style="padding: 14px 16px;">
+                  <div>${b.check_in_date} &rarr; ${b.check_out_date}</div>
+                  <div style="font-size: 0.8rem; color: #777;">${b.num_nights} Night(s)</div>
+                </td>
+                <td style="padding: 14px 16px; font-weight: 700;">₹${Number(b.total_amount).toLocaleString('en-IN')}</td>
+                <td style="padding: 14px 16px;">
+                  <span style="padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; ${isCancelled ? 'background: #f8d7da; color: #721c24;' : 'background: #d4edda; color: #155724;'}">
+                    ${b.status}
+                  </span>
+                </td>
+                <td style="padding: 14px 16px; text-align: right;">
+                  ${!isCancelled ? `
+                    <button onclick="adminCancelBooking(${b.id})" class="btn-outline" style="padding: 5px 12px; font-size: 0.75rem; color: #c0392b; border-color: #f5c6cb; cursor: pointer;">
+                      <i class="fas fa-ban"></i> Cancel Override
+                    </button>
+                  ` : '<span style="color: #999; font-size: 0.8rem;">Cancelled</span>'}
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function adminCancelBooking(bookingId) {
+      if (!confirm('Are you sure you want to cancel this booking via Admin Override? The room will be returned to inventory immediately.')) return;
+      try {
+        const res = await fetch(`/api/admin/bookings/${bookingId}/cancel`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          VHotels.showToast('Reservation cancelled and inventory restored.', 'info');
+          loadAdminBookings();
+          loadAdminStats();
+          loadInventory();
+        } else {
+          alert(data.message || 'Error cancelling reservation.');
+        }
+      } catch (err) {
+        alert('Network error.');
+      }
+    }
+
     function switchAdminTab(tab) {
       const usersContent = document.getElementById('tab-users-content');
       const suitesContent = document.getElementById('tab-suites-content');
+      const bookingsContent = document.getElementById('tab-bookings-content');
       const usersBtn = document.getElementById('tab-btn-users');
       const suitesBtn = document.getElementById('tab-btn-suites');
+      const bookingsBtn = document.getElementById('tab-btn-bookings');
+
+      [usersContent, suitesContent, bookingsContent].forEach(el => el.style.display = 'none');
+      [usersBtn, suitesBtn, bookingsBtn].forEach(btn => {
+        btn.style.color = '#777';
+        btn.style.borderBottom = 'none';
+        btn.style.marginBottom = '0';
+      });
 
       if (tab === 'users') {
         usersContent.style.display = 'block';
-        suitesContent.style.display = 'none';
         usersBtn.style.color = 'var(--color-gold)';
         usersBtn.style.borderBottom = '3px solid var(--color-gold)';
         usersBtn.style.marginBottom = '-15px';
-        suitesBtn.style.color = '#777';
-        suitesBtn.style.borderBottom = 'none';
-        suitesBtn.style.marginBottom = '0';
-      } else {
-        usersContent.style.display = 'none';
+      } else if (tab === 'suites') {
         suitesContent.style.display = 'block';
         suitesBtn.style.color = 'var(--color-gold)';
         suitesBtn.style.borderBottom = '3px solid var(--color-gold)';
         suitesBtn.style.marginBottom = '-15px';
-        usersBtn.style.color = '#777';
-        usersBtn.style.borderBottom = 'none';
-        usersBtn.style.marginBottom = '0';
+      } else if (tab === 'bookings') {
+        bookingsContent.style.display = 'block';
+        bookingsBtn.style.color = 'var(--color-gold)';
+        bookingsBtn.style.borderBottom = '3px solid var(--color-gold)';
+        bookingsBtn.style.marginBottom = '-15px';
+        loadAdminBookings();
       }
     }
 

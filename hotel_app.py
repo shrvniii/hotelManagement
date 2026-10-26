@@ -1014,6 +1014,108 @@ def toggle_user_status(user_id, requesting_admin_id):
     return True, f"User account has been {new_status}."
 
 
+def create_suite(code, name, resort_location, suite_type, price_per_night, capacity_guests, total_rooms, description="", amenities="", image_url=""):
+    """Admin function to create a new luxury suite property."""
+    if not code or not name or not resort_location:
+        return False, "Suite code, name, and resort location are required."
+
+    try:
+        price = float(price_per_night)
+        capacity = int(capacity_guests)
+        rooms = int(total_rooms)
+        if price <= 0 or capacity <= 0 or rooms <= 0:
+            return False, "Price, capacity, and total rooms must be positive numbers."
+    except (ValueError, TypeError):
+        return False, "Invalid numeric values provided for price, capacity, or total rooms."
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # Check for duplicate code
+    cursor.execute("SELECT id FROM suites WHERE code = ?", (code.strip().upper(),))
+    if cursor.fetchone():
+        conn.close()
+        return False, f"A suite with code '{code.strip().upper()}' already exists."
+
+    img = image_url.strip() if image_url else "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800"
+    try:
+        cursor.execute("""
+            INSERT INTO suites (code, name, resort_location, suite_type, price_per_night, capacity_guests, total_rooms, available_rooms, description, amenities, image_url, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'available')
+        """, (code.strip().upper(), name.strip(), resort_location.strip(), suite_type or 'Exclusive', price, capacity, rooms, rooms, description.strip(), amenities.strip(), img))
+        suite_id = cursor.lastrowid
+        conn.commit()
+    except Exception as e:
+        conn.close()
+        return False, f"Database error creating suite: {str(e)}"
+
+    conn.close()
+    return True, f"Suite '{name}' successfully created and added to inventory."
+
+
+def update_suite(suite_id, name, resort_location, suite_type, price_per_night, capacity_guests, total_rooms, available_rooms, status='available'):
+    """Admin function to update suite pricing, rooms, or maintenance status."""
+    try:
+        price = float(price_per_night)
+        capacity = int(capacity_guests)
+        tot_rooms = int(total_rooms)
+        avail_rooms = int(available_rooms)
+    except (ValueError, TypeError):
+        return False, "Invalid numeric values for price, capacity, or rooms."
+
+    if avail_rooms > tot_rooms:
+        return False, "Available rooms cannot exceed total rooms."
+
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM suites WHERE id = ?", (suite_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return False, "Suite not found."
+
+    cursor.execute("""
+        UPDATE suites
+        SET name = ?, resort_location = ?, suite_type = ?, price_per_night = ?,
+            capacity_guests = ?, total_rooms = ?, available_rooms = ?, status = ?
+        WHERE id = ?
+    """, (name.strip(), resort_location.strip(), suite_type, price, capacity, tot_rooms, avail_rooms, status, suite_id))
+    conn.commit()
+    conn.close()
+    return True, "Suite details and inventory successfully updated."
+
+
+def delete_suite(suite_id):
+    """Admin function to safely delete a suite or mark as maintenance if bookings exist."""
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id, name FROM suites WHERE id = ?", (suite_id,))
+    suite = cursor.fetchone()
+    if not suite:
+        conn.close()
+        return False, "Suite not found."
+
+    # Check active bookings
+    cursor.execute("SELECT COUNT(*) as count FROM bookings WHERE suite_id = ? AND status != 'cancelled'", (suite_id,))
+    active_count = cursor.fetchone()['count']
+    if active_count > 0:
+        # Instead of deleting and breaking relational integrity, mark as maintenance
+        cursor.execute("UPDATE suites SET status = 'maintenance', available_rooms = 0 WHERE id = ?", (suite_id,))
+        conn.commit()
+        conn.close()
+        return True, f"Suite '{suite['name']}' has {active_count} active booking(s). It has been decommissioned and set to 'Maintenance' so no further reservations can be made."
+
+    try:
+        cursor.execute("DELETE FROM suites WHERE id = ?", (suite_id,))
+        conn.commit()
+    except Exception as e:
+        conn.close()
+        return False, f"Could not delete suite: {str(e)}"
+
+    conn.close()
+    return True, f"Suite '{suite['name']}' permanently deleted from the estate database."
+
+
 # ==============================================================================
 # Inquiries & Notices
 # ==============================================================================

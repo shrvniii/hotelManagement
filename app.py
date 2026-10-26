@@ -390,6 +390,94 @@ def api_admin_toggle_user(current_user, user_id):
     return jsonify({'success': True, 'message': msg}), 200
 
 
+@app.route('/api/admin/users/create', methods=['POST'])
+@require_auth(roles=['admin'])
+def api_admin_create_user(current_user):
+    """Admin endpoint to provision Staff or Administrator accounts."""
+    data = request.get_json() or {}
+    title = data.get('title', 'Mr.')
+    first_name = data.get('first_name', '')
+    last_name = data.get('last_name', '')
+    dob = data.get('dob', '')
+    email = data.get('email', '')
+    password = data.get('password', '')
+    mobile = data.get('mobile', '')
+    preferred_resort = data.get('preferred_resort', '')
+    address = data.get('address', '')
+    role = data.get('role', 'staff')
+
+    ok, msg, user = hotel_app.register_user(
+        title, first_name, last_name, dob, email, password, mobile, preferred_resort, address, role=role
+    )
+    if not ok:
+        return jsonify({'success': False, 'message': msg}), 400
+
+    return jsonify({'success': True, 'message': f'New {role.capitalize()} account created successfully.', 'user': user}), 201
+
+
+@app.route('/api/admin/suites', methods=['POST'])
+@require_auth(roles=['admin'])
+def api_admin_create_suite(current_user):
+    """Admin endpoint to create a new luxury suite."""
+    data = request.get_json() or {}
+    ok, msg = hotel_app.create_suite(
+        code=data.get('code', ''),
+        name=data.get('name', ''),
+        resort_location=data.get('resort_location', ''),
+        suite_type=data.get('suite_type', 'Exclusive'),
+        price_per_night=data.get('price_per_night', 0),
+        capacity_guests=data.get('capacity_guests', 2),
+        total_rooms=data.get('total_rooms', 4),
+        description=data.get('description', ''),
+        amenities=data.get('amenities', ''),
+        image_url=data.get('image_url', '')
+    )
+    if not ok:
+        return jsonify({'success': False, 'message': msg}), 400
+    return jsonify({'success': True, 'message': msg}), 201
+
+
+@app.route('/api/admin/suites/<int:suite_id>', methods=['PUT'])
+@require_auth(roles=['admin'])
+def api_admin_update_suite(current_user, suite_id):
+    """Admin endpoint to update suite pricing, rooms, or maintenance."""
+    data = request.get_json() or {}
+    ok, msg = hotel_app.update_suite(
+        suite_id=suite_id,
+        name=data.get('name', ''),
+        resort_location=data.get('resort_location', ''),
+        suite_type=data.get('suite_type', 'Exclusive'),
+        price_per_night=data.get('price_per_night', 0),
+        capacity_guests=data.get('capacity_guests', 2),
+        total_rooms=data.get('total_rooms', 4),
+        available_rooms=data.get('available_rooms', 4),
+        status=data.get('status', 'available')
+    )
+    if not ok:
+        return jsonify({'success': False, 'message': msg}), 400
+    return jsonify({'success': True, 'message': msg}), 200
+
+
+@app.route('/api/admin/suites/<int:suite_id>', methods=['DELETE'])
+@require_auth(roles=['admin'])
+def api_admin_delete_suite(current_user, suite_id):
+    """Admin endpoint to safely delete or decommission a suite."""
+    ok, msg = hotel_app.delete_suite(suite_id)
+    if not ok:
+        return jsonify({'success': False, 'message': msg}), 400
+    return jsonify({'success': True, 'message': msg}), 200
+
+
+@app.route('/api/admin/bookings/<int:booking_id>/cancel', methods=['POST'])
+@require_auth(roles=['admin'])
+def api_admin_cancel_booking(current_user, booking_id):
+    """Admin override to cancel any reservation across the system."""
+    ok, msg = hotel_app.cancel_booking(booking_id, current_user['id'], is_staff_or_admin=True)
+    if not ok:
+        return jsonify({'success': False, 'message': msg}), 400
+    return jsonify({'success': True, 'message': msg}), 200
+
+
 # ==============================================================================
 # Inquiries & Notices API
 # ==============================================================================
