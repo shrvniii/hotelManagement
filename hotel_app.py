@@ -14,9 +14,23 @@ import os
 import re
 import random
 import datetime
+import shutil
 from werkzeug.security import generate_password_hash, check_password_hash
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vhotels.db')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ORIG_DB_PATH = os.path.join(BASE_DIR, 'vhotels.db')
+
+# On Vercel / serverless environment, use /tmp for a writable SQLite database
+if os.environ.get('VERCEL') or not os.access(BASE_DIR, os.W_OK):
+    TMP_DB = os.path.join('/tmp', 'vhotels.db')
+    if not os.path.exists(TMP_DB) and os.path.exists(ORIG_DB_PATH):
+        try:
+            shutil.copy2(ORIG_DB_PATH, TMP_DB)
+        except Exception:
+            pass
+    DB_PATH = TMP_DB
+else:
+    DB_PATH = ORIG_DB_PATH
 
 
 def get_db():
