@@ -117,23 +117,70 @@
             </select>
           </div>
 
+          <!-- Bespoke Add-Ons Selection -->
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 8px;">
+              <i class="fas fa-gem" style="color: var(--color-gold);"></i> Bespoke Luxury Enhancements (Optional)
+            </label>
+            
+            <div class="addon-card" id="addon-champagne" onclick="toggleAddon('champagne', 4500)">
+              <div class="addon-info">
+                <input type="checkbox" id="check-addon-champagne" style="cursor: pointer; transform: scale(1.15);" onclick="event.stopPropagation(); toggleAddon('champagne', 4500);">
+                <div class="addon-icon"><i class="fas fa-wine-glass-alt"></i></div>
+                <div>
+                  <span class="addon-title">Vintage Champagne & Caviar</span>
+                  <span class="addon-desc">Chilled bottle of Veuve Clicquot & Beluga sturgeon caviar on arrival</span>
+                </div>
+              </div>
+              <div class="addon-price">+₹4,500</div>
+            </div>
+
+            <div class="addon-card" id="addon-spa" onclick="toggleAddon('spa', 7500)">
+              <div class="addon-info">
+                <input type="checkbox" id="check-addon-spa" style="cursor: pointer; transform: scale(1.15);" onclick="event.stopPropagation(); toggleAddon('spa', 7500);">
+                <div class="addon-icon"><i class="fas fa-spa"></i></div>
+                <div>
+                  <span class="addon-title">Couples Royal Ayurvedic Spa</span>
+                  <span class="addon-desc">90-minute bespoke herbal massage & rejuvenation treatment</span>
+                </div>
+              </div>
+              <div class="addon-price">+₹7,500</div>
+            </div>
+
+            <div class="addon-card" id="addon-transfer" onclick="toggleAddon('transfer', 12000)">
+              <div class="addon-info">
+                <input type="checkbox" id="check-addon-transfer" style="cursor: pointer; transform: scale(1.15);" onclick="event.stopPropagation(); toggleAddon('transfer', 12000);">
+                <div class="addon-icon"><i class="fas fa-car-side"></i></div>
+                <div>
+                  <span class="addon-title">Rolls-Royce / Yacht Chauffeur</span>
+                  <span class="addon-desc">Private airport/heliport meet-and-greet in luxury fleet</span>
+                </div>
+              </div>
+              <div class="addon-price">+₹12,000</div>
+            </div>
+          </div>
+
           <div style="margin-bottom: 20px;">
             <label for="special-requests" style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 6px;">Special Requests / Concierge Notes</label>
-            <textarea id="special-requests" rows="2" placeholder="e.g. VIP airport transfer, dietary preferences, celebratory arrangements..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 0.9rem; outline: none; resize: vertical;"></textarea>
+            <textarea id="special-requests" rows="2" placeholder="e.g. Dietary preferences, celebratory anniversary flower arrangement..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 0.9rem; outline: none; resize: vertical;"></textarea>
           </div>
 
           <!-- Financial Calculation Breakdown Box -->
           <div style="background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem;">
               <span id="calc-nights-label">₹55,000 x 3 Nights:</span>
               <span id="calc-subtotal" style="font-weight: 600;">₹1,65,000</span>
+            </div>
+            <div id="calc-addons-row" style="display: none; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; color: #8a6d1c;">
+              <span>Selected Luxury Enhancements:</span>
+              <span id="calc-addons-val" style="font-weight: 600;">+₹0</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem;">
               <span>Luxury Hospitality GST (18%):</span>
               <span id="calc-tax" style="font-weight: 600;">₹29,700</span>
             </div>
             <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 700; border-top: 1px dashed #ddd; padding-top: 12px; margin-top: 5px;">
-              <span>Total Price:</span>
+              <span>Estimated Folio Total:</span>
               <span id="calc-total" style="color: var(--color-gold);">₹1,94,700</span>
             </div>
           </div>
@@ -277,6 +324,37 @@
       document.getElementById('book-guests').addEventListener('change', calculateTotals);
     }
 
+    const selectedAddons = {
+      champagne: false,
+      spa: false,
+      transfer: false
+    };
+
+    const addonPrices = {
+      champagne: 4500,
+      spa: 7500,
+      transfer: 12000
+    };
+
+    const addonLabels = {
+      champagne: "Vintage Champagne & Beluga Caviar (+₹4,500)",
+      spa: "Couples Royal Ayurvedic Spa (+₹7,500)",
+      transfer: "Private Rolls-Royce Chauffeur Transfer (+₹12,000)"
+    };
+
+    function toggleAddon(key, price) {
+      const chk = document.getElementById(`check-addon-${key}`);
+      const card = document.getElementById(`addon-${key}`);
+      selectedAddons[key] = !selectedAddons[key];
+      chk.checked = selectedAddons[key];
+      if (selectedAddons[key]) {
+        card.classList.add('selected');
+      } else {
+        card.classList.remove('selected');
+      }
+      calculateTotals();
+    }
+
     function calculateTotals() {
       if (!currentSuite) return;
 
@@ -291,8 +369,24 @@
 
       const rate = currentSuite.price_per_night;
       const subtotal = rate * nights;
-      const tax = subtotal * 0.18;
-      const total = subtotal + tax;
+
+      let addonsSum = 0;
+      for (const [k, isSelected] of Object.entries(selectedAddons)) {
+        if (isSelected) addonsSum += addonPrices[k];
+      }
+
+      const addonsRow = document.getElementById('calc-addons-row');
+      const addonsVal = document.getElementById('calc-addons-val');
+      if (addonsSum > 0) {
+        addonsRow.style.display = 'flex';
+        addonsVal.textContent = `+₹${addonsSum.toLocaleString('en-IN')}`;
+      } else {
+        addonsRow.style.display = 'none';
+      }
+
+      const taxableBase = subtotal + addonsSum;
+      const tax = taxableBase * 0.18;
+      const total = taxableBase + tax;
 
       document.getElementById('calc-nights-label').textContent = `₹${rate.toLocaleString('en-IN')} x ${nights} Night${nights > 1 ? 's' : ''}:`;
       document.getElementById('calc-subtotal').textContent = `₹${Math.round(subtotal).toLocaleString('en-IN')}`;
@@ -317,7 +411,17 @@
       const checkIn = document.getElementById('book-checkin').value;
       const checkOut = document.getElementById('book-checkout').value;
       const guests = document.getElementById('book-guests').value;
-      const requests = document.getElementById('special-requests').value;
+      let requests = document.getElementById('special-requests').value.trim();
+
+      // Collect selected add-ons and append to concierge notes
+      const chosen = [];
+      for (const [k, isSelected] of Object.entries(selectedAddons)) {
+        if (isSelected) chosen.push(addonLabels[k]);
+      }
+      if (chosen.length > 0) {
+        const addonText = `[Bespoke Enhancements: ${chosen.join(', ')}]`;
+        requests = requests ? `${addonText} - Notes: ${requests}` : addonText;
+      }
 
       const btn = document.getElementById('btn-confirm-booking');
       btn.textContent = 'Processing Reservation...';

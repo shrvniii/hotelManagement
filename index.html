@@ -39,7 +39,12 @@
       <span class="tagline">A Sanctuary of Elegance</span>
       <h1 class="gold-text">Experience Timeless Luxury</h1>
       <p>Where grand heritage meets modern refinement, crafting memories that linger forever.</p>
-      <a href="suites.html" class="btn-outline">Explore Estates</a>
+      <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 25px;">
+        <a href="suites.html" class="btn-outline" style="padding: 12px 28px;">Explore Estates</a>
+        <button onclick="document.getElementById('aria-chat-box').classList.add('active')" class="btn-gold" style="padding: 12px 28px; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border-radius: 4px;">
+          <i class="fas fa-concierge-bell"></i> Consult AI Butler
+        </button>
+      </div>
     </div>
     
     <div class="scroll-down" onclick="document.getElementById('booking-search').scrollIntoView();">

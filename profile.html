@@ -88,6 +88,55 @@
       </div>
     </div>
 
+    <!-- Solitaire Diamond Elite Membership Card (Visible ONLY for Guest Members) -->
+    <section id="guest-loyalty-tier" style="display: none; margin-bottom: 35px;">
+      <div class="solitaire-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+          <div>
+            <span style="font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase; color: #c9a227; font-weight: 700; display: block; margin-bottom: 4px;">
+              <i class="fas fa-crown"></i> VHOTELS IMPERIAL GUILD
+            </span>
+            <h3 style="font-family: var(--font-serif); font-size: 1.8rem; color: #fff; margin: 0; letter-spacing: 0.05em;">
+              Solitaire Diamond Tier
+            </h3>
+          </div>
+          <div style="text-align: right;">
+            <div class="solitaire-chip"></div>
+            <span style="font-size: 0.75rem; color: #c9a227; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600;">Contactless VIP</span>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px;">
+          <div>
+            <div style="font-size: 0.72rem; color: #999; text-transform: uppercase; letter-spacing: 0.1em;">Cardholder</div>
+            <div id="solitaire-member-name" style="font-size: 1.25rem; font-weight: 700; color: #ffffff; letter-spacing: 0.05em;">
+              LADY / LORD GUEST
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: #999; text-transform: uppercase; letter-spacing: 0.1em;">Imperial Account ID</div>
+            <div id="solitaire-member-id" style="font-family: monospace; font-size: 1.15rem; color: #c9a227; font-weight: 700; letter-spacing: 2px;">
+              VHT-2026-8849
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: #999; text-transform: uppercase; letter-spacing: 0.1em;">Imperial Points Balance</div>
+            <div style="font-size: 1.25rem; font-weight: 700; color: #2ecc71;">
+              <i class="fas fa-coins" style="color: #f1c40f;"></i> 18,500 pts
+            </div>
+          </div>
+        </div>
+
+        <!-- Tier Privileges Bar -->
+        <div style="margin-top: 25px; padding-top: 18px; border-top: 1px solid rgba(201, 162, 39, 0.25); display: flex; flex-wrap: wrap; gap: 20px; font-size: 0.8rem; color: #d4af37;">
+          <span><i class="fas fa-check-circle"></i> Complimentary 4-Course Royal Breakfast</span>
+          <span><i class="fas fa-check-circle"></i> Guaranteed 16:00 Late Check-Out</span>
+          <span><i class="fas fa-check-circle"></i> 24/7 Dedicated Royal Butler</span>
+          <span><i class="fas fa-check-circle"></i> Welcome Chilled Champagne in Suite</span>
+        </div>
+      </div>
+    </section>
+
     <!-- Staff & Admin Operations Hub (Visible ONLY to Staff & Admin) -->
     <section id="staff-admin-panel" style="display: none; background: #ffffff; border: 1px solid var(--color-light-gray); border-radius: 16px; padding: 40px; box-shadow: var(--shadow-glass); margin-bottom: 40px;">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
@@ -225,15 +274,23 @@
 
         const myBookingsSection = document.getElementById('my-bookings');
         const staffAdminSection = document.getElementById('staff-admin-panel');
+        const loyaltySection = document.getElementById('guest-loyalty-tier');
 
-        // Only Guests see the "Book Another Suite" and "My Reservations" section
+        // Only Guests see the "Book Another Suite", "My Reservations" and Elite Loyalty section
         if (currentProfile.role === 'guest') {
           myBookingsSection.style.display = 'block';
+          loyaltySection.style.display = 'block';
           staffAdminSection.style.display = 'none';
+
+          const cardName = `${currentProfile.title || ''} ${currentProfile.first_name} ${currentProfile.last_name}`.trim().toUpperCase();
+          document.getElementById('solitaire-member-name').textContent = cardName || 'ESTEEMED GUEST';
+          document.getElementById('solitaire-member-id').textContent = `VHT-2026-${String(currentProfile.id).padStart(4, '0')}`;
+
           loadBookings();
         } else {
           // Staff and Admin are hotel employees/executives, not vacation guests
           myBookingsSection.style.display = 'none';
+          loyaltySection.style.display = 'none';
           staffAdminSection.style.display = 'block';
           renderStaffAdminPanel(currentProfile);
         }
