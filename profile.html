@@ -77,7 +77,7 @@
             <span class="value" id="disp-mobile" style="font-weight: 500; color: #111;">-</span>
           </div>
           <div class="profile-info-item" style="border-bottom: 1px dashed #ddd; padding-bottom: 8px;">
-            <span class="label" style="color: #666; font-weight: 600;">Preferred Resort:</span>
+            <span class="label" id="label-resort" style="color: #666; font-weight: 600;">Preferred Resort:</span>
             <span class="value" id="disp-resort" style="font-weight: 500; color: #111;">-</span>
           </div>
           <div class="profile-info-item" style="grid-column: 1 / -1; border-bottom: 1px dashed #ddd; padding-bottom: 8px;">
@@ -88,8 +88,26 @@
       </div>
     </div>
 
-    <!-- My Luxury Reservations Section -->
-    <section id="my-bookings" style="background: #ffffff; border: 1px solid var(--color-light-gray); border-radius: 16px; padding: 40px; box-shadow: var(--shadow-glass);">
+    <!-- Staff & Admin Operations Hub (Visible ONLY to Staff & Admin) -->
+    <section id="staff-admin-panel" style="display: none; background: #ffffff; border: 1px solid var(--color-light-gray); border-radius: 16px; padding: 40px; box-shadow: var(--shadow-glass); margin-bottom: 40px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div>
+          <span class="gold-text" id="sap-subtitle" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700;">
+            <i class="fas fa-id-badge"></i> Operational Console
+          </span>
+          <h2 id="sap-title" style="font-family: var(--font-serif); font-size: 1.8rem; margin: 6px 0 8px;">Management Workspace</h2>
+          <p id="sap-desc" style="color: #666; font-size: 0.95rem; margin: 0; max-width: 600px;">
+            Access operational tools, master reservations, guest check-ins, and hotel administration.
+          </p>
+        </div>
+        <div id="sap-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <!-- Injected dynamically based on role -->
+        </div>
+      </div>
+    </section>
+
+    <!-- My Luxury Reservations Section (Visible ONLY to Guest / Member) -->
+    <section id="my-bookings" style="display: none; background: #ffffff; border: 1px solid var(--color-light-gray); border-radius: 16px; padding: 40px; box-shadow: var(--shadow-glass);">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
         <div>
           <h2 style="font-family: var(--font-serif); font-size: 1.8rem; margin: 0 0 5px;">My Luxury Reservations</h2>
@@ -204,7 +222,21 @@
 
         currentProfile = data.user;
         renderProfileDisplay(currentProfile);
-        loadBookings();
+
+        const myBookingsSection = document.getElementById('my-bookings');
+        const staffAdminSection = document.getElementById('staff-admin-panel');
+
+        // Only Guests see the "Book Another Suite" and "My Reservations" section
+        if (currentProfile.role === 'guest') {
+          myBookingsSection.style.display = 'block';
+          staffAdminSection.style.display = 'none';
+          loadBookings();
+        } else {
+          // Staff and Admin are hotel employees/executives, not vacation guests
+          myBookingsSection.style.display = 'none';
+          staffAdminSection.style.display = 'block';
+          renderStaffAdminPanel(currentProfile);
+        }
       } catch (err) {
         console.error(err);
       }
@@ -220,8 +252,42 @@
       document.getElementById('disp-dob').textContent = u.dob || '-';
       document.getElementById('disp-email').textContent = u.email;
       document.getElementById('disp-mobile').textContent = u.mobile;
+      document.getElementById('label-resort').textContent = u.role === 'guest' ? 'Preferred Resort:' : 'Assigned Property / Desk:';
       document.getElementById('disp-resort').textContent = u.preferred_resort || '-';
       document.getElementById('disp-address').textContent = u.address;
+    }
+
+    function renderStaffAdminPanel(u) {
+      const actions = document.getElementById('sap-actions');
+      const title = document.getElementById('sap-title');
+      const subtitle = document.getElementById('sap-subtitle');
+      const desc = document.getElementById('sap-desc');
+
+      if (u.role === 'admin') {
+        subtitle.innerHTML = `<i class="fas fa-crown"></i> Executive Administration`;
+        title.textContent = 'Hotel Chain Management Console';
+        desc.textContent = 'Welcome, Executive Administrator. Access global financial KPIs, modify suite rates, oversee user security, and manage master reservations.';
+        actions.innerHTML = `
+          <a href="admin_dashboard.html" class="btn-gold" style="text-decoration: none; padding: 12px 22px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-crown"></i> Open Executive Admin Center
+          </a>
+          <a href="staff_dashboard.html" class="btn-outline" style="text-decoration: none; padding: 12px 20px; font-size: 0.9rem; color: #111; border-color: #ccc; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-concierge-bell"></i> Staff Operations Roster
+          </a>
+        `;
+      } else if (u.role === 'staff') {
+        subtitle.innerHTML = `<i class="fas fa-concierge-bell"></i> VIP Reception & Operations`;
+        title.textContent = 'Concierge Staff Workspace';
+        desc.textContent = 'Welcome, Concierge Staff. Access the live guest arrival roster, perform front-desk check-ins, and export attendance spreadsheets.';
+        actions.innerHTML = `
+          <a href="staff_dashboard.html" class="btn-gold" style="text-decoration: none; padding: 12px 22px; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-concierge-bell"></i> Open Concierge Staff Portal
+          </a>
+          <a href="suites.html" class="btn-outline" style="text-decoration: none; padding: 12px 20px; font-size: 0.9rem; color: #111; border-color: #ccc; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-hotel"></i> Explore Suite Catalog
+          </a>
+        `;
+      }
     }
 
     async function loadBookings() {
