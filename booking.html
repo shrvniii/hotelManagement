@@ -88,6 +88,16 @@
 
         <form id="booking-form" novalidate>
           
+          <!-- Suite / Resort Dropdown Selector -->
+          <div style="margin-bottom: 15px;">
+            <label for="select-suite-dropdown" style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 6px;">
+              <i class="fas fa-hotel" style="color: var(--color-gold);"></i> Luxury Suite & Destination
+            </label>
+            <select id="select-suite-dropdown" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 0.95rem; outline: none; background: #fff; cursor: pointer;">
+              <!-- Populated dynamically via JS -->
+            </select>
+          </div>
+
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
             <div>
               <label for="book-checkin" style="display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: #555; margin-bottom: 6px;">Check-In</label>
@@ -163,6 +173,22 @@
       const suiteId = params.get('suite_id') || 1;
 
       try {
+        // Load all suites to populate the selector dropdown
+        const allRes = await fetch('/api/suites');
+        const allData = await allRes.json();
+        if (allData.success) {
+          const dropdown = document.getElementById('select-suite-dropdown');
+          dropdown.innerHTML = allData.suites.map(st => `
+            <option value="${st.id}" ${st.id == suiteId ? 'selected' : ''}>
+              ${st.resort_location}: ${st.name} (₹${Number(st.price_per_night).toLocaleString('en-IN')}/night)
+            </option>
+          `).join('');
+
+          dropdown.addEventListener('change', (e) => {
+            window.location.href = `booking.html?suite_id=${e.target.value}`;
+          });
+        }
+
         const res = await fetch(`/api/suites/${suiteId}`);
         const data = await res.json();
         if (data.success) {
